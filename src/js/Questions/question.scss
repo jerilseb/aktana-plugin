@@ -1,0 +1,156 @@
+#vken-controls {
+    * {
+        box-sizing: content-box;
+    }
+    
+    .codex-editor__redactor {
+        padding-bottom: 0 !important;
+    }
+
+     use {
+        fill-opacity: unset;
+        stroke-opacity: unset;
+        fill: unset;
+        stroke: unset;
+    }
+
+    .cdx-block {
+        padding: .2em 0;
+    }
+
+    .questions-container {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0,0,0,0.3);
+        /* pointer-events: none; */
+        z-index: 72;
+    
+        &.visible {
+            display: flex;
+            pointer-events: auto;
+        }
+    
+        .questions-div {
+            position: absolute;
+            width: calc(100% - 120px);
+            margin: auto;
+            max-width: 800px;
+            background: white;
+            border-radius: 3px;
+            padding: 3em 2.2em;
+            box-shadow: -7px 7px 33px -5px rgba(0,0,0,0.45);
+            pointer-events: auto;
+    
+            .close-button {
+                width: 1.4em;
+                height: 1.4em;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                padding: 0.3em;
+                position: absolute;
+                right: -.7em;
+                top: -.7em;
+                background:#4a4a4a;
+                cursor: pointer;
+    
+                svg {
+                    transform: scale(0.75);
+                }
+            }
+        }
+    }
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+.vjs-progress-control {
+    .question-marker {
+        width: 10px;
+        height: 100%;
+        position: absolute;
+
+        svg {
+            width: 20px;
+            transform: translateY(-5px);
+            transform-origin: bottom;
+            transition: transform 0.1s linear;
+
+            &:hover {
+                cursor: pointer;
+                transform: translateY(-5px) scale(1.25);
+            }
+        }
+
+        &::after {
+            content: attr(data-tip);
+            position: absolute;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            width: 8.5em;
+            padding: .5em;
+            background: rgba(10, 10, 10, 0.75);
+            transform: translate(-4em, -5.5em);
+            color: #fff;
+            pointer-events: none;
+            border-radius: 2px;
+            font-size: 0.8em;
+            letter-spacing: -0.3px;
+        }
+
+        &:hover::after {
+            display: flex;
+        }
+
+        &.attempted svg .background {
+            fill: #abf5bd;
+        }
+    
+    }
+}
+
+.vken-add-question {
+    cursor: pointer;
+
+    svg {
+        width: 20px;
+    }
+
+    &:hover {
+        transform: scale(1.2);
+    }
+
+    &::after {
+        content: "Add Question";
+        position: absolute;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        width: 7.5em;
+        height: 2em;
+        background: rgba(10, 10, 10, 0.75);
+        transform: translate(-3em, -5em);
+        color: #fff;
+        pointer-events: none;
+        border-radius: 2px;
+        font-size: 0.7em;
+        font-weight: 500;
+        letter-spacing: -0.3px;
+    }
+
+    &:hover::after {
+        display: flex;
+    }
+}
