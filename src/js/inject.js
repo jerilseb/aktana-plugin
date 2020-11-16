@@ -47,7 +47,7 @@ async function initialize() {
     let controlBar = container.querySelector('.vjs-control-bar');
     if(controlBar === null) {
         LOG("Waiting for controlbar");
-        controlBar = await waitforElement(container, '.vjs-control-bar');
+        controlBar = await waitForElement(container, '.vjs-control-bar');
     }
   
     // Fire a time update event every second
