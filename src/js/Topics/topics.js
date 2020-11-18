@@ -1,5 +1,4 @@
 import fetchTopics from "./mockData";
-import topicsIcon from "../../icons/topics.svg";
 import Popup from "./popup";
 import { LOG } from "../lib/util";
 import "./topics.scss";
@@ -21,7 +20,6 @@ export default class Topics {
         if(this._topics) {
             let addQuestionDiv = document.createElement('div');
             addQuestionDiv.setAttribute('class', 'vjs-control vjs-button vken-topics-button');
-            addQuestionDiv.innerHTML = topicsIcon;
 
             let playbackRateButton = this._controlBar.querySelector(".vjs-playback-rate");
             playbackRateButton.insertAdjacentElement('beforebegin', addQuestionDiv);

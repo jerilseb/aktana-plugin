@@ -1,8 +1,7 @@
-// rollup.config.js
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import scss from 'rollup-plugin-scss';
-import inlineSvg from 'rollup-plugin-inline-svg';
+import postcss from 'rollup-plugin-postcss';
+import inlineSvg from "postcss-inline-svg";
 
 export default [
     {
@@ -14,10 +13,12 @@ export default [
       plugins: [
           nodeResolve(),
           commonjs(),
-          scss({
-            output: true
-          }),
-          inlineSvg()
+          postcss({
+            extract: true,
+            plugins: [
+              inlineSvg()
+            ]
+          })
         ]
     }
 ]

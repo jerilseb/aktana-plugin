@@ -2,10 +2,9 @@
     .vken-topics-button {
         cursor: pointer;
         margin: 0 3px;
-
-        svg {
-            width: 20px;
-        }
+        background-image: svg-load('../../icons/topics.svg');
+        width: 20px;
+        height: 20px;
 
         &:hover {
             transform: scale(1.2);

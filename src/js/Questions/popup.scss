@@ -1,124 +1,126 @@
-q-popup {
-    position: absolute;
-    width: calc(100% - 180px);
-    margin: auto;
-    max-width: 800px;
-    background: white;
-    border-radius: 2px;
-    padding: 2em 2.2em 2em 2.2em;
-    box-shadow: -7px 7px 33px -5px rgba(0,0,0,0.45);
-    pointer-events: auto;
-    display: flex;
-    flex-direction: column;
-    color: #111111;
-    font-size: 15px;
-
-    &.visible {
-        animation-duration: .4s;
-        animation-name: appear;
-    }
-
-    .close-button {
-        width: 1.2em;
-        height: 1.2em;
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+#vken-controls {
+    q-popup {
         position: absolute;
-        right: .4em;
-        top: .4em;
-        cursor: pointer;
-    }
-
-    .submit-button, .save-button {
-        width: 6em;
-        height: 2.2em;
-        background: #227fd6;
-        display: none;
-        position: absolute;
-        bottom: 1.5em;
-        right: 1.5em;
-        color: #ffffff;
-        align-items: center;
-        justify-content: center;
-        letter-spacing: .03em;
-        border-radius: 3px;
-    }
-
-    &:not([editable])[status="can-submit"] .submit-button {
-        cursor: pointer;
-        display: flex;
-    }
-
-    &[editable][status="can-submit"] .save-button {
-        cursor: pointer;
-        display: flex;
-    }
-
-    .resume-button {
-        display: none;
-        width: 7em;
-        height: 2.2em;
-        background: #ed0e0e;
-        position: absolute;
-        bottom: 1.5em;
-        right: 1.5em;
-        color: #ffffff;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        border-radius: 3px;
-        cursor: pointer;
-
-        &::before {
-            content: 'RESUME';
-            font-weight: 500;
-            margin: .25em;
-        }
-    }
-
-    &[status="submitted"] .resume-button {
-        display: flex;
-        animation-name: fade-in;
-        animation-duration: 1.5s;
-    }
-
-    #q-text {
-        margin-bottom: .8em;
-        max-height: 9em;
-        overflow-y: scroll;
-        background: #fafafa;
-        border: 1px solid #cccccc;
-        padding: .8em;
-        font-size: .9em;
-        overflow-x: hidden;
-
-        &::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        &::-webkit-scrollbar-thumb {
-            border-radius: 3px;
-            background: #d2d2d2;
-        }
-
-        * {
-            box-sizing: content-box;
-        }
-    }
-
-    .title {
-        position: absolute;
-        width: 5.6em;
-        height: 2em;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #444444;
-        left: -.6em;
-        top: -.6em;
-        color: #ffffff;
+        width: calc(100% - 180px);
+        margin: auto;
+        max-width: 800px;
+        background: white;
         border-radius: 2px;
+        padding: 2em 2.2em 2em 2.2em;
+        box-shadow: -7px 7px 33px -5px rgba(0,0,0,0.45);
+        pointer-events: auto;
+        display: flex;
+        flex-direction: column;
+        color: #111111;
+        font-size: 15px;
+
+        &.visible {
+            animation-duration: .4s;
+            animation-name: appear;
+        }
+
+        .close-button {
+            width: 1.2em;
+            height: 1.2em;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            right: .4em;
+            top: .4em;
+            cursor: pointer;
+        }
+
+        .submit-button, .save-button {
+            width: 6em;
+            height: 2.2em;
+            background: #227fd6;
+            display: none;
+            position: absolute;
+            bottom: 1.5em;
+            right: 1.5em;
+            color: #ffffff;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: .03em;
+            border-radius: 3px;
+        }
+
+        &:not([editable])[status="can-submit"] .submit-button {
+            cursor: pointer;
+            display: flex;
+        }
+
+        &[editable][status="can-submit"] .save-button {
+            cursor: pointer;
+            display: flex;
+        }
+
+        .resume-button {
+            display: none;
+            width: 7em;
+            height: 2.2em;
+            background: #ed0e0e;
+            position: absolute;
+            bottom: 1.5em;
+            right: 1.5em;
+            color: #ffffff;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            border-radius: 3px;
+            cursor: pointer;
+
+            &::before {
+                content: 'RESUME';
+                font-weight: 500;
+                margin: .25em;
+            }
+        }
+
+        &[status="submitted"] .resume-button {
+            display: flex;
+            animation-name: fade-in;
+            animation-duration: 1.5s;
+        }
+
+        #q-text {
+            margin-bottom: .8em;
+            max-height: 9em;
+            overflow-y: scroll;
+            background: #fafafa;
+            border: 1px solid #cccccc;
+            padding: .8em;
+            font-size: .9em;
+            overflow-x: hidden;
+
+            &::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                border-radius: 3px;
+                background: #d2d2d2;
+            }
+
+            * {
+                box-sizing: content-box;
+            }
+        }
+
+        .title {
+            position: absolute;
+            width: 5.6em;
+            height: 2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #444444;
+            left: -.6em;
+            top: -.6em;
+            color: #ffffff;
+            border-radius: 2px;
+        }
     }
 }

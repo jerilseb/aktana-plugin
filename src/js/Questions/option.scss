@@ -41,7 +41,7 @@
         }
         
         &[status="active"] .checkbox {
-            cursor: pointer;
+            cursor: svg-load('../../icons/tick.svg', fill=#18b574), pointer;
         }
         
         &[status="active"] .checkbox:hover {
@@ -59,58 +59,20 @@
             // border-bottom: 1px solid #cccccc;
         }
 
-        
         &[type="multi"][selected] .checkbox {
             border: none;
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNzIgNzIiIHdpZHRoPSI3MiIgaGVpZ2h0PSI3MiIgeG1sbnM9Imh0
-            dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsPSIjMjI3ZmQ2IiBkPSJNLTEtMWg3
-            NHY3NEgtMXoiLz48Zz48cGF0aCBkPSJNMjAuMDggMjUuMzlsMjIuNTktNi44OSIgb3BhY2l0eT0i
-            LjUiIHN0cm9rZS1vcGFjaXR5PSJudWxsIiBzdHJva2Utd2lkdGg9Im51bGwiIHN0cm9rZT0ibnVs
-            bCIgZmlsbD0iIzE0MTQxNCIvPjxwYXRoIGQ9Ik0xODguOTcgMjEwLjc4bDI0MC40NC03Ni45NiAx
-            ODguMjQgOTcuMDZjLjczLjUtMTUwLjc0IDkwLjItMTUyLjIgOTEuNjctMS40OCAxLjQ3LTE2NC43
-            MSA4My44Mi0xNjUuNDUgODMuMzMuNzQuNSAxMjEuMzItMTA1LjM5IDEyMC41OS0xMDUuODhNNDUw
-            Ljc0IDIzNy4yNkwzNTAgMTg4LjI0IiBvcGFjaXR5PSIuNSIgZmlsbC1vcGFjaXR5PSJudWxsIiBz
-            dHJva2Utb3BhY2l0eT0ibnVsbCIgc3Ryb2tlLXdpZHRoPSJudWxsIiBzdHJva2U9Im51bGwiIGZp
-            bGw9IiNmZmYiLz48cGF0aCBzdHJva2U9IiNmZmYiIGQ9Ik0xNS40MiAzOS4yNmwxNi4yNCAxNC45
-            Yy4wNy4wNSA2LjktMTYuMTkgMjUuNTktMzYuMjciIHN0cm9rZS13aWR0aD0iNyIgZmlsbD0ibm9u
-            ZSIvPjwvZz48L3N2Zz4=
-            ');
+            background-image: svg-load('../../icons/tick.svg', fill=#227fd6);
         }
         
         &[status="correct"] div.checkbox, &[selected][editable] div.checkbox {
             border: none;
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNzIgNzIiIHdpZHRoPSI3MiIgaGVpZ2h0PSI3MiIgeG1sbnM9Imh0
-            dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsPSIjMThiNTc0IiBkPSJNLTEtMWg3
-            NHY3NEgtMXoiLz48Zz48cGF0aCBkPSJNMjAuMDggMjUuMzlsMjIuNTktNi44OSIgb3BhY2l0eT0i
-            LjUiIHN0cm9rZS1vcGFjaXR5PSJudWxsIiBzdHJva2Utd2lkdGg9Im51bGwiIHN0cm9rZT0ibnVs
-            bCIgZmlsbD0iIzE0MTQxNCIvPjxwYXRoIGQ9Ik0xODguOTcgMjEwLjc4bDI0MC40NC03Ni45NiAx
-            ODguMjQgOTcuMDZjLjczLjUtMTUwLjc0IDkwLjItMTUyLjIgOTEuNjctMS40OCAxLjQ3LTE2NC43
-            MSA4My44Mi0xNjUuNDUgODMuMzMuNzQuNSAxMjEuMzItMTA1LjM5IDEyMC41OS0xMDUuODhNNDUw
-            Ljc0IDIzNy4yNkwzNTAgMTg4LjI0IiBvcGFjaXR5PSIuNSIgZmlsbC1vcGFjaXR5PSJudWxsIiBz
-            dHJva2Utb3BhY2l0eT0ibnVsbCIgc3Ryb2tlLXdpZHRoPSJudWxsIiBzdHJva2U9Im51bGwiIGZp
-            bGw9IiNmZmYiLz48cGF0aCBzdHJva2U9IiNmZmYiIGQ9Ik0xNS40MiAzOS4yNmwxNi4yNCAxNC45
-            Yy4wNy4wNSA2LjktMTYuMTkgMjUuNTktMzYuMjciIHN0cm9rZS13aWR0aD0iNyIgZmlsbD0ibm9u
-            ZSIvPjwvZz48L3N2Zz4=
-            ');
+            background-image: svg-load('../../icons/tick.svg', fill=#18b574);
+            cursor: pointer;
         }
         
         &[status="wrong"] div.checkbox {
             border: none;
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNzIgNzIiIHdpZHRoPSI3MiIgaGVpZ2h0PSI3MiIgeG1sbnM9Imh0
-            dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsPSIjZTAzZDU5IiBkPSJNLTEtMWg3
-            NHY3NEgtMXoiLz48Zz48cGF0aCBkPSJNMjAuMDggMjUuMzlsMjIuNTktNi44OSIgb3BhY2l0eT0i
-            LjUiIHN0cm9rZS1vcGFjaXR5PSJudWxsIiBzdHJva2Utd2lkdGg9Im51bGwiIHN0cm9rZT0ibnVs
-            bCIgZmlsbD0iIzE0MTQxNCIvPjxwYXRoIGQ9Ik0xODguOTcgMjEwLjc4bDI0MC40NC03Ni45NiAx
-            ODguMjQgOTcuMDZjLjczLjUtMTUwLjc0IDkwLjItMTUyLjIgOTEuNjctMS40OCAxLjQ3LTE2NC43
-            MSA4My44Mi0xNjUuNDUgODMuMzMuNzQuNSAxMjEuMzItMTA1LjM5IDEyMC41OS0xMDUuODhNNDUw
-            Ljc0IDIzNy4yNkwzNTAgMTg4LjI0IiBvcGFjaXR5PSIuNSIgZmlsbC1vcGFjaXR5PSJudWxsIiBz
-            dHJva2Utb3BhY2l0eT0ibnVsbCIgc3Ryb2tlLXdpZHRoPSJudWxsIiBzdHJva2U9Im51bGwiIGZp
-            bGw9IiNmZmYiLz48cGF0aCBzdHJva2UtbGluZWNhcD0ibnVsbCIgc3Ryb2tlLWxpbmVqb2luPSJu
-            dWxsIiBzdHJva2Utb3BhY2l0eT0ibnVsbCIgc3Ryb2tlLXdpZHRoPSI3IiBzdHJva2U9IiNmZmYi
-            IGZpbGw9Im5vbmUiIGQ9Ik0yMC4yNSAxOC43Mkw1NC4wMyA1Mi41TTUzLjg2IDE4Ljg5TDIwLjA4
-            IDUyLjY3Ii8+PC9nPjwvc3ZnPg==
-            ');
+            background-image: svg-load('../../icons/cross.svg');
         }
     }
-    
 }

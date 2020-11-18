@@ -70,26 +70,26 @@
     }
 }
 
-
 .hidden {
     display: none !important;
 }
 
-.vjs-progress-control {
-    .question-marker {
-        width: 10px;
-        height: 100%;
-        position: absolute;
 
-        svg {
+.vjs-control-bar {
+    .vken-question-pin {
+        .question-icon {
             width: 20px;
-            transform: translateY(-5px);
+            height: 20px;
+            position: absolute;
+            background-image: svg-load('../../icons/question.svg');
+            background-repeat: no-repeat;
+            transform: translateY(-18px);
             transform-origin: bottom;
             transition: transform 0.1s linear;
 
             &:hover {
                 cursor: pointer;
-                transform: translateY(-5px) scale(1.25);
+                transform: translateY(-18px) scale(1.25);
             }
         }
 
@@ -113,44 +113,47 @@
         &:hover::after {
             display: flex;
         }
+    }
 
-        &.attempted svg .background {
-            fill: #abf5bd;
+    .vjs-control.vken-add-question-icon {
+        cursor: pointer;
+        background-image: svg-load('../../icons/plus.svg');
+        width: 20px;
+        height: 20px;
+    
+        &:hover {
+            transform: scale(1.2);
         }
     
+        &::after {
+            content: "Add Question";
+            position: absolute;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            width: 7.5em;
+            height: 2em;
+            background: rgba(10, 10, 10, 0.75);
+            transform: translate(-3em, -5em);
+            color: #fff;
+            pointer-events: none;
+            border-radius: 2px;
+            font-size: 0.7em;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+        }
+    
+        &:hover::after {
+            display: flex;
+        }
     }
-}
-
-.vken-add-question {
-    cursor: pointer;
-
-    svg {
-        width: 20px;
-    }
-
-    &:hover {
-        transform: scale(1.2);
-    }
-
-    &::after {
-        content: "Add Question";
+    
+    .vken-question-edit-menu {
         position: absolute;
-        display: none;
-        justify-content: center;
-        align-items: center;
-        width: 7.5em;
-        height: 2em;
-        background: rgba(10, 10, 10, 0.75);
-        transform: translate(-3em, -5em);
-        color: #fff;
-        pointer-events: none;
-        border-radius: 2px;
-        font-size: 0.7em;
-        font-weight: 500;
-        letter-spacing: -0.3px;
-    }
-
-    &:hover::after {
-        display: flex;
+        width: 100px;
+        height: 50px;
+        background: #ffffff;
+        border-radius: 4px;
+        transform: translateY(-70px);
     }
 }

@@ -2,8 +2,6 @@ import '@webcomponents/custom-elements';
 import fetchQuestions from "./mockQuestions2";
 import questionPlaceholder from "./questionPlaceholder";
 import { secondsToHours } from "../lib/util";
-import questionIcon from "../../icons/question.svg";
-import plusIcon from "../../icons/plus.svg";
 // import { fetchQuestions } from "./fetch";
 import { LOG } from "../lib/util";
 import { html, render } from "lit-html";
@@ -30,11 +28,15 @@ export default class Question {
             }
         });
 
-        this._EE.on("marker-click", value => {
-            let question = this._questions.filter(q => q['id'] === value)[0];
+        this._EE.on("marker-click", (qId, position) => {
+            let question = this._questions.filter(q => q['id'] === qId)[0];
             if(question) {
-                this.currentQuestion = question;
-                this.show();
+                if(!this.editable) {
+                     this.showEditMenu(qId, position);
+                } else {
+                    this.currentQuestion = question;
+                    this.show();
+                }
             }
         });
     }
@@ -111,9 +113,7 @@ export default class Question {
         this._editable = !!value;
 
         let addQuestionDiv = document.createElement('div');
-        addQuestionDiv.setAttribute('class', 'vjs-control vjs-button vken-add-question');
-        addQuestionDiv.innerHTML = plusIcon;
-
+        addQuestionDiv.setAttribute('class', 'vjs-control vjs-button vken-add-question-icon');
         let playbackRateButton = this._controlBar.querySelector(".vjs-playback-rate");
         playbackRateButton.insertAdjacentElement('beforebegin', addQuestionDiv);
 
@@ -143,30 +143,45 @@ export default class Question {
     }
 
     insertMarker(question, animate = false) {
-        const [start, end] = question['time'];
+        const [start, _] = question['time'];
         const duration = parseInt(this._video.duration);
         const percentage = ((start / duration) * 100).toFixed(2);
 
-        const marker = document.createElement('div');
-        marker.setAttribute('class', 'question-marker');
-        marker.setAttribute('data-qid', question['id']);
-        marker.setAttribute('data-tip', `Question at ${secondsToHours(start)}`);
-        marker.style.left = `calc(${percentage}% - 8px)`;
-        marker.innerHTML = questionIcon;
+        if (percentage > 99) return;
 
-        marker.addEventListener('click', event => {
-            this._EE.emit("marker-click", question['id']);
+        const template = document.createElement('template');
+        template.innerHTML = `
+            <div 
+                class="vken-question-pin" 
+                data-qid=${question["id"]}
+                data-tip="Question at ${secondsToHours(start)}"
+                style="left: calc(${percentage}% - 8px)"
+            >
+                <div class="question-icon"></div>
+            </div>
+
+        `;
+
+        const marker = template.content;
+        marker.addEventListener('click', _ => {
+            this._EE.emit("marker-click", question['id'], percentage);
         });
-
         this._timeline.appendChild(marker);
     }
     
     setupTimelineMarkers() {
-        if(this._timeline) {
-            for (let question of this._questions) {
-                this.insertMarker(question);
-            }
+        if(!this._timeline) {
+            LOG("Timeline not ready, skipping markers");
+            return;
         }
+
+        for (let question of this._questions) {
+            this.insertMarker(question);
+        }
+
+        this._editMenu = document.createElement('div');
+        this._editMenu.setAttribute('class', "vken-question-edit-menu");
+        this._controlBar.append(this._editMenu);
     }
 
     async getQuestionsForVideo(videoId) {
@@ -178,5 +193,10 @@ export default class Question {
             LOG("Setting up timeline Markers");
             this.setupTimelineMarkers();
         }
+    }
+
+    showEditMenu(qId, position) {
+        const menu = document.createElement('div');
+        menu.setAttribute('class', "vken-question-edit-menu");
     }
 }
