@@ -10,9 +10,10 @@ customElements.define('q-popup', class extends HTMLElement {
         return html`
             <div class="title">Question</div>
             <div id="q-text"></div>
-            <q-options @option-change=${() => this.optionChanged()}></q-options>
+            <q-options ?editable=${this.editable}></q-options>
             
             <div class="submit-button" @click=${() => this.submit()}>SUBMIT</div>
+            <div class="save-button" @click=${() => this.saveQuestion()}>SAVE</div>
             <div class="resume-button" @click=${() => this.closePopup()}>
                 <svg viewBox="0 0 72 72" width="22" height="22">
                     <path fill="none" d="M-1-1h74v74H-1z"/>
@@ -32,23 +33,38 @@ customElements.define('q-popup', class extends HTMLElement {
         render(this.template, this);
 
         this._editor = null;
-        this._options = this.querySelector('q-options');
+        this._optionsEl = this.querySelector('q-options');
         this._questionText = this.querySelector('#q-text');
+
+        this.addEventListener('option-change', event => { 
+            if(this._optionsEl.selected.length > 0) {
+                this.status = "can-submit";
+            } else {
+                this.status = "";
+            }
+        })
     }
 
-    optionChanged() {
-        if(this._options.selected.length > 0) {
-            this.status = "can-submit";
-        } else {
-            this.status = "";
-        }
+    static get observedAttributes() {
+        return ['editable'];
+    }
+
+    attributeChangedCallback(name) {
+        render(this.template, this);
     }
 
     closePopup() {
-        // this._editor.destroy();
-
         this.dispatchEvent(new CustomEvent('close', {
-            bubbles: true,
+            bubbles: false,
+            composed: true
+        }));
+    }
+
+    saveQuestion() {
+        if(!this.editable) return;
+
+        this.dispatchEvent(new CustomEvent('save', {
+            bubbles: false,
             composed: true
         }));
     }
@@ -56,22 +72,46 @@ customElements.define('q-popup', class extends HTMLElement {
     submit() {
         if(this.status === "can-submit") {
             this.status = "submitted";
-            this._options.revealAnswers(this._correctOptions);
+            this._optionsEl.revealAnswers(this._correctOptions);
         }        
     }
 
-    setQuestion(questionType, questionText, options, correctOptions) {
-        LOG("Setting question text", questionText);
-        this._options.type = questionType;
-        this._options.options = options;
-        this._correctOptions = correctOptions;
+    set question(question) {
+        const { id, text, options, type, correct } = question;
+
+        this._optionsEl.type = type;
+        this._optionsEl.options = options;
+        this._correctOptions = correct;
+        this.qID = id;
         this.status = "";
 
-        this._editor = new EditorJS({
-            holder: 'q-text',
-            data: questionText,
-            readOnly: false
-        });
+        try {
+            this._editor = new EditorJS({
+                holder: 'q-text',
+                data: text,
+                readOnly: !this.editable
+            });
+        }
+        catch(err) {
+            console.error("AKTANA:", err);
+        }
+    }
+
+    async editedQuestion() {
+        return {
+            id: this.qID,
+            text: await this._editor.save(),
+            options: this._optionsEl.options,
+            correct: this._optionsEl.selected
+        }
+    }
+
+    get qID() {
+        return parseInt(this.getAttribute('qid'));
+    }
+
+    set qID(value) {
+        this.setAttribute('qid', value);
     }
 
     get status() {
@@ -82,12 +122,20 @@ customElements.define('q-popup', class extends HTMLElement {
         this.setAttribute('status', value);
     }
 
+    get editable() {
+        return this.hasAttribute('editable');
+    }
+
+    set editable(value) {
+        return this.toggleAttribute('editable', !!value);
+    }
+
     get visible() {
         return this.classList.contains('visible');
     }
 
     set visible(value) {
-        this.classList.toggle('visible', value);
+        this.classList.toggle('visible', !!value);
         if(!value) {
             this._questionText.innerHTML = '';
         }

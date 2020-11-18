@@ -3,7 +3,7 @@
         box-sizing: content-box;
     }
     
-    .codex-editor__redactor {
+    q-popup:not([editable]) .codex-editor__redactor {
         padding-bottom: 0 !important;
     }
 

@@ -31,25 +31,29 @@ q-popup {
         cursor: pointer;
     }
 
-    .submit-button {
+    .submit-button, .save-button {
         width: 6em;
         height: 2.2em;
         background: #227fd6;
-        opacity: 0;
+        display: none;
         position: absolute;
         bottom: 1.5em;
         right: 1.5em;
         color: #ffffff;
-        display: flex;
         align-items: center;
         justify-content: center;
         letter-spacing: .03em;
         border-radius: 3px;
     }
 
-    &[status="can-submit"] .submit-button {
+    &:not([editable])[status="can-submit"] .submit-button {
         cursor: pointer;
-        opacity: 1;
+        display: flex;
+    }
+
+    &[editable][status="can-submit"] .save-button {
+        cursor: pointer;
+        display: flex;
     }
 
     .resume-button {

@@ -18,20 +18,13 @@ export default class Question {
         this._EE = EE;
 
         this._EE.on("time-update", currentTime => {
-            LOG("time-update event", currentTime);
-            if(this.visible) return;
+            if(this.editable || this.visible) return;
             
             for (let question of this._questions) {
                 const [start, end] = question['time'];
-                if(
-                    !question.shown &&
-                    currentTime >= start && 
-                    currentTime <= end
-                )
-                {
-                    LOG("Setting question", question);
-                    this.setCurrentQuestion(question);
-                    this.showCurrentQuestion();
+                if(!question.shown && currentTime >= start && currentTime <= end) {
+                    this.currentQuestion = question;
+                    this.show();
                     break;
                 }
             }
@@ -40,8 +33,8 @@ export default class Question {
         this._EE.on("marker-click", value => {
             let question = this._questions.filter(q => q['id'] === value)[0];
             if(question) {
-                this.setCurrentQuestion(question);
-                this.showCurrentQuestion();
+                this.currentQuestion = question;
+                this.show();
             }
         });
     }
@@ -49,35 +42,53 @@ export default class Question {
     get template() {
         return html`
             <div class="questions-container">
-                <q-popup @close=${() => this.closeAndPlay()}></q-popup>
+                <q-popup ?editable=${this.editable} 
+                    @close=${() => this.closeAndPlay()}
+                    @save=${() => this.saveQuestion()}
+                ></q-popup>
             </div>
         `;
     }
 
-    setupControls(container, video) {
+    setupControls(container, controlBar, video) {
         this._video = video;
         this._container = container;
-        let div = document.createElement('div');
-        div.setAttribute('id', 'vken-controls');
-        this._container.append(div);
+        this._controlBar = controlBar;
+        this._timeline = this._container.querySelector('.vjs-progress-control');
 
-        render(this.template, div);
+
+        this.render();
         this._el = container.querySelector('.questions-container');
-        this._popup = this._el.querySelector('q-popup');
+        this._popupEl = this._el.querySelector('q-popup');
+    }
+
+    render() {
+        LOG("Rendering popup");
+        let div = this._container.querySelector("#vken-controls");
+        if(!div) {
+            div = document.createElement('div');
+            div.setAttribute('id', 'vken-controls');
+            this._container.append(div);
+        }
+        render(this.template, div);
     }
 
     closeAndPlay() {
         this.visible = false;
         this._video.play();
     }
-
-    setCurrentQuestion(question) {
-        const { text, options, type, correct } = question;
-        this._popup.setQuestion(type, text, options, correct);
+    
+    set currentQuestion(question) {
+        LOG("Setting question", question);
         this._currentQuestion = question;
+        this._popupEl.question = question;
     }
 
-    showCurrentQuestion() {
+    get currentQuestion() {
+        return this._currentQuestion;
+    }
+
+    show() {
         this._video.pause();
         this.visible = true;
         this._currentQuestion.shown = true;
@@ -88,61 +99,74 @@ export default class Question {
     }
 
     set visible(value) {
-        this._popup.visible = value;
-        this._el.classList.toggle('visible', value);
+        this._popupEl.visible = !!value;
+        this._el.classList.toggle('visible', !!value);
     }
 
     get editable() {
-        return this._el.classList.contains('editable');
+        return this._editable;
     }
 
     set editable(value) {
-        this._el.classList.toggle('editable', value);
-    }
-    
-    setupTimelineMarkers() {
-        let timeline = this._container.querySelector('.vjs-progress-control');
-        if(timeline) {
-            const duration = parseInt(this._video.duration);
-    
-            for (let question of this._questions) {
-                const [start, end] = question['time'];
-                const percentage = ((start / duration) * 100).toFixed(2);
-    
-                if(percentage > 98) continue;
-    
-                const marker = document.createElement('div');
-                marker.setAttribute('class', 'question-marker');
-                marker.setAttribute('data-qid', question['id']);
-                marker.setAttribute('data-tip', `Question at ${secondsToHours(start)}`);
-                marker.style.left = `calc(${percentage}% - 8px)`;
-                marker.innerHTML = questionIcon;
-    
-                marker.addEventListener('click', event => {
-                    this._EE.emit("marker-click", question['id']);
-                });
-    
-                timeline.appendChild(marker);
-            }
-        }
-    }
+        this._editable = !!value;
 
-    async enableEdit(controlBar) {
         let addQuestionDiv = document.createElement('div');
         addQuestionDiv.setAttribute('class', 'vjs-control vjs-button vken-add-question');
         addQuestionDiv.innerHTML = plusIcon;
 
-        let playbackRateButton = controlBar.querySelector(".vjs-playback-rate");
+        let playbackRateButton = this._controlBar.querySelector(".vjs-playback-rate");
         playbackRateButton.insertAdjacentElement('beforebegin', addQuestionDiv);
 
         addQuestionDiv.addEventListener('click', event => {
             LOG("Add icon clicked");
-            const { text, options, type } = questionPlaceholder;
-            this._popup.setQuestion(type, text, options, 0);
+            this.currentQuestion = questionPlaceholder;
             this._video.pause();
             this.visible = true;
         });
+
+        this.render();
         LOG("Adding edit icon: Done");
+    }
+
+    async saveQuestion() {
+        this.visible = false;
+        let { id, text, options, correct } = await this._popupEl.editedQuestion();
+        
+        if(id === -1) {
+            let time = this._video.currentTime;
+            LOG("This is a new question");
+        }
+
+        let question = { text, options, correct, type: "single", time: [time, time + 5]};
+
+        LOG(text, options, correct);
+    }
+
+    insertMarker(question, animate = false) {
+        const [start, end] = question['time'];
+        const duration = parseInt(this._video.duration);
+        const percentage = ((start / duration) * 100).toFixed(2);
+
+        const marker = document.createElement('div');
+        marker.setAttribute('class', 'question-marker');
+        marker.setAttribute('data-qid', question['id']);
+        marker.setAttribute('data-tip', `Question at ${secondsToHours(start)}`);
+        marker.style.left = `calc(${percentage}% - 8px)`;
+        marker.innerHTML = questionIcon;
+
+        marker.addEventListener('click', event => {
+            this._EE.emit("marker-click", question['id']);
+        });
+
+        this._timeline.appendChild(marker);
+    }
+    
+    setupTimelineMarkers() {
+        if(this._timeline) {
+            for (let question of this._questions) {
+                this.insertMarker(question);
+            }
+        }
     }
 
     async getQuestionsForVideo(videoId) {

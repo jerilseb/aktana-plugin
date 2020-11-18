@@ -1,10 +1,11 @@
+import { LOG } from "../lib/util";
 import "./Option";
 
 customElements.define('q-options', class extends HTMLElement {
 
     constructor() {
         super();
-        this._options = [];
+        // this._options = [];
         this._selectedIdx = [];
     }
 
@@ -39,7 +40,17 @@ customElements.define('q-options', class extends HTMLElement {
     }
 
     get options() {
-        return this._options;
+        // return this._options;
+        let qOptions = this.querySelectorAll('q-option');
+        return Array.from(qOptions).map(option => option.text);
+    }
+
+    get editable() {
+        return this.hasAttribute('editable');
+    }
+
+    set editable(value) {
+        return this.toggleAttribute('editable', !!value);
     }
 
     set options(values) {
@@ -47,12 +58,13 @@ customElements.define('q-options', class extends HTMLElement {
         this._numOptions = 0;
         this.innerHTML = '';
         for(let optionText of values) {
-            this._options.push(optionText);
+            // this._options.push(optionText);
             const qOption = document.createElement('q-option');
             qOption.status = 'active';
             qOption.type = this.type;
             qOption.index = this._numOptions;
-            qOption.innerHTML = optionText;
+            qOption.text = optionText;
+            qOption.editable = this.editable;
             this.appendChild(qOption);
             this._numOptions++;
         }
@@ -62,7 +74,7 @@ customElements.define('q-options', class extends HTMLElement {
         let correct = true;
         let qOptions = this.querySelectorAll('q-option');
         
-        for (let i=0; i < this._options.length; i++) {
+        for (let i=0; i < qOptions.length; i++) {
             let qOption = qOptions[i];
             qOption.selected = false;
             if(correctOptions.includes(i)) {

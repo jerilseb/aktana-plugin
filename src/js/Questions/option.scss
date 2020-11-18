@@ -1,0 +1,116 @@
+#vken-controls {
+    q-option {
+        display: flex;
+        flex-direction: row;
+        margin: .5em .2em .2em .2em;
+        font-size: 15px;
+        align-items: center;
+    
+        * {
+            box-sizing: border-box;
+        }
+
+        .option-text {
+            display: inline-block;
+            margin-left: .7em;
+            padding: 0 .3em;
+            border-radius: 3px;
+            // border-bottom: 1px solid #ffffff;
+        }
+        
+        .checkbox {
+            box-sizing: border-box;
+            border-width: .15em;
+            border-color: #999999;
+            border-style: solid;
+            border-radius: .1em;
+            width: 1.2em;
+            height: 1.2em;
+            display: inline-block;
+            flex-shrink: 0;
+            background-size: 1.2em;
+            background-repeat: round;
+        }
+        
+        &[type="single"] .checkbox {
+            border-radius: 50%;
+        }
+        
+        &[type="single"][selected] .checkbox {
+            border-width: .35em;
+        }
+        
+        &[status="active"] .checkbox {
+            cursor: pointer;
+        }
+        
+        &[status="active"] .checkbox:hover {
+            border-color: #666666;
+            transform: scale(1.05);
+        }
+        
+        &[selected] .checkbox, q-option[selected] .checkbox:hover {
+            border-color: #227fd6;
+        }
+
+        &[editable] .option-text:hover, &[editable] .option-text:focus {
+            cursor: text;
+            background: #eeeeee;
+            // border-bottom: 1px solid #cccccc;
+        }
+
+        
+        &[type="multi"][selected] .checkbox {
+            border: none;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNzIgNzIiIHdpZHRoPSI3MiIgaGVpZ2h0PSI3MiIgeG1sbnM9Imh0
+            dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsPSIjMjI3ZmQ2IiBkPSJNLTEtMWg3
+            NHY3NEgtMXoiLz48Zz48cGF0aCBkPSJNMjAuMDggMjUuMzlsMjIuNTktNi44OSIgb3BhY2l0eT0i
+            LjUiIHN0cm9rZS1vcGFjaXR5PSJudWxsIiBzdHJva2Utd2lkdGg9Im51bGwiIHN0cm9rZT0ibnVs
+            bCIgZmlsbD0iIzE0MTQxNCIvPjxwYXRoIGQ9Ik0xODguOTcgMjEwLjc4bDI0MC40NC03Ni45NiAx
+            ODguMjQgOTcuMDZjLjczLjUtMTUwLjc0IDkwLjItMTUyLjIgOTEuNjctMS40OCAxLjQ3LTE2NC43
+            MSA4My44Mi0xNjUuNDUgODMuMzMuNzQuNSAxMjEuMzItMTA1LjM5IDEyMC41OS0xMDUuODhNNDUw
+            Ljc0IDIzNy4yNkwzNTAgMTg4LjI0IiBvcGFjaXR5PSIuNSIgZmlsbC1vcGFjaXR5PSJudWxsIiBz
+            dHJva2Utb3BhY2l0eT0ibnVsbCIgc3Ryb2tlLXdpZHRoPSJudWxsIiBzdHJva2U9Im51bGwiIGZp
+            bGw9IiNmZmYiLz48cGF0aCBzdHJva2U9IiNmZmYiIGQ9Ik0xNS40MiAzOS4yNmwxNi4yNCAxNC45
+            Yy4wNy4wNSA2LjktMTYuMTkgMjUuNTktMzYuMjciIHN0cm9rZS13aWR0aD0iNyIgZmlsbD0ibm9u
+            ZSIvPjwvZz48L3N2Zz4=
+            ');
+        }
+        
+        &[status="correct"] div.checkbox, &[selected][editable] div.checkbox {
+            border: none;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNzIgNzIiIHdpZHRoPSI3MiIgaGVpZ2h0PSI3MiIgeG1sbnM9Imh0
+            dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsPSIjMThiNTc0IiBkPSJNLTEtMWg3
+            NHY3NEgtMXoiLz48Zz48cGF0aCBkPSJNMjAuMDggMjUuMzlsMjIuNTktNi44OSIgb3BhY2l0eT0i
+            LjUiIHN0cm9rZS1vcGFjaXR5PSJudWxsIiBzdHJva2Utd2lkdGg9Im51bGwiIHN0cm9rZT0ibnVs
+            bCIgZmlsbD0iIzE0MTQxNCIvPjxwYXRoIGQ9Ik0xODguOTcgMjEwLjc4bDI0MC40NC03Ni45NiAx
+            ODguMjQgOTcuMDZjLjczLjUtMTUwLjc0IDkwLjItMTUyLjIgOTEuNjctMS40OCAxLjQ3LTE2NC43
+            MSA4My44Mi0xNjUuNDUgODMuMzMuNzQuNSAxMjEuMzItMTA1LjM5IDEyMC41OS0xMDUuODhNNDUw
+            Ljc0IDIzNy4yNkwzNTAgMTg4LjI0IiBvcGFjaXR5PSIuNSIgZmlsbC1vcGFjaXR5PSJudWxsIiBz
+            dHJva2Utb3BhY2l0eT0ibnVsbCIgc3Ryb2tlLXdpZHRoPSJudWxsIiBzdHJva2U9Im51bGwiIGZp
+            bGw9IiNmZmYiLz48cGF0aCBzdHJva2U9IiNmZmYiIGQ9Ik0xNS40MiAzOS4yNmwxNi4yNCAxNC45
+            Yy4wNy4wNSA2LjktMTYuMTkgMjUuNTktMzYuMjciIHN0cm9rZS13aWR0aD0iNyIgZmlsbD0ibm9u
+            ZSIvPjwvZz48L3N2Zz4=
+            ');
+        }
+        
+        &[status="wrong"] div.checkbox {
+            border: none;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNzIgNzIiIHdpZHRoPSI3MiIgaGVpZ2h0PSI3MiIgeG1sbnM9Imh0
+            dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsPSIjZTAzZDU5IiBkPSJNLTEtMWg3
+            NHY3NEgtMXoiLz48Zz48cGF0aCBkPSJNMjAuMDggMjUuMzlsMjIuNTktNi44OSIgb3BhY2l0eT0i
+            LjUiIHN0cm9rZS1vcGFjaXR5PSJudWxsIiBzdHJva2Utd2lkdGg9Im51bGwiIHN0cm9rZT0ibnVs
+            bCIgZmlsbD0iIzE0MTQxNCIvPjxwYXRoIGQ9Ik0xODguOTcgMjEwLjc4bDI0MC40NC03Ni45NiAx
+            ODguMjQgOTcuMDZjLjczLjUtMTUwLjc0IDkwLjItMTUyLjIgOTEuNjctMS40OCAxLjQ3LTE2NC43
+            MSA4My44Mi0xNjUuNDUgODMuMzMuNzQuNSAxMjEuMzItMTA1LjM5IDEyMC41OS0xMDUuODhNNDUw
+            Ljc0IDIzNy4yNkwzNTAgMTg4LjI0IiBvcGFjaXR5PSIuNSIgZmlsbC1vcGFjaXR5PSJudWxsIiBz
+            dHJva2Utb3BhY2l0eT0ibnVsbCIgc3Ryb2tlLXdpZHRoPSJudWxsIiBzdHJva2U9Im51bGwiIGZp
+            bGw9IiNmZmYiLz48cGF0aCBzdHJva2UtbGluZWNhcD0ibnVsbCIgc3Ryb2tlLWxpbmVqb2luPSJu
+            dWxsIiBzdHJva2Utb3BhY2l0eT0ibnVsbCIgc3Ryb2tlLXdpZHRoPSI3IiBzdHJva2U9IiNmZmYi
+            IGZpbGw9Im5vbmUiIGQ9Ik0yMC4yNSAxOC43Mkw1NC4wMyA1Mi41TTUzLjg2IDE4Ljg5TDIwLjA4
+            IDUyLjY3Ii8+PC9nPjwvc3ZnPg==
+            ');
+        }
+    }
+    
+}

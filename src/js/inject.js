@@ -65,9 +65,15 @@ async function initialize() {
       }
     }, 1000);
   
-    questions.setupControls(container, video);
+    questions.setupControls(container, controlBar, video);
     await questions.getQuestionsForVideo(videoId);
-    questions.enableEdit(controlBar);
+
+    chrome.storage.local.get(['auth_token'], ({ auth_token }) => {
+      if(auth_token) {
+        LOG("Auth token found, enabling edit mode");
+        questions.editable = true;
+      }
+    });
   
     topics.setupControls(container, controlBar);
     await topics.getTopcis(videoId);
