@@ -11,7 +11,7 @@
         "256": "icons/256.png"
     },
     "permissions": ["storage"],
-    "background": { "scripts": ["other/hot-reload.js"] },
+    "background": { "scripts": ["background-scripts/hot-reload.js"] },
     "browser_action": {
         "default_icon": {
             "16": "icons/16.png",

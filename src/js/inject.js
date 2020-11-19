@@ -2,8 +2,8 @@ import EventEmitter from "eventemitter3";
 import md5 from "fast-md5";
 import { sleep, debounce, getQueryParam, LOG } from "./lib/util";
 import { waitForElementInsertion, waitForElement } from "./lib/domUtil";
-import Question from "./Questions/question";
-import Topics from "./Topics/topics";
+import Question from "./questions/question";
+import Topics from "./topics/topics";
 
 window.addEventListener("load", async () => {
     LOG("Document load fired");
