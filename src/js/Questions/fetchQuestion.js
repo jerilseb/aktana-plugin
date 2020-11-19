@@ -1,6 +1,6 @@
 import { LOG } from "../util";
 
-export async function fetchQuestions(videoId) {
+export default async function fetchQuestions(videoId) {
     const questions = [];
     
     try {

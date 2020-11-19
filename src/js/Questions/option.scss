@@ -41,7 +41,7 @@
         }
         
         &[status="active"] .checkbox {
-            cursor: svg-load('../../icons/tick.svg', fill=#18b574), pointer;
+            cursor: pointer;
         }
         
         &[status="active"] .checkbox:hover {
@@ -53,9 +53,15 @@
             border-color: #227fd6;
         }
 
-        &[editable] .option-text:hover, &[editable] .option-text:focus {
+        &[editable] .option-text:hover {
+            cursor: svg-load('../../icons/cursor/pencil.svg'), pointer;
+            background-color: #eaeaea;
+            // border-bottom: 1px solid #cccccc;
+        }
+
+        &[editable] .option-text:focus {
             cursor: text;
-            background: #eeeeee;
+            background-color: #eaeaea;
             // border-bottom: 1px solid #cccccc;
         }
 

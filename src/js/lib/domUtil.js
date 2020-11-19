@@ -103,3 +103,39 @@ export function watchForAttributeChange(element, attribute, callback) {
         subtree: false
     });
 }
+
+export function template(strings, ...args) {
+    let result = ``;
+    const placeholders = {};
+    for (let i = 0; i < args.length; i++) {
+        if (args[i] instanceof HTMLElement) {
+            const id = `id${i}`;
+            placeholders[id] = args[i];
+            result += `${strings[i]}<div replace="${id}"></div>`;
+        } else {
+            result += strings[i] + args[i];
+        }
+    }
+    result += strings[strings.length - 1];
+  
+    const template = document.createElement(`template`);
+    template.innerHTML = result;
+    const content = template.content;
+
+    for(let refNode of content.querySelectorAll('[replace]')) {
+        const newNode = placeholders[refNode.getAttribute('replace')];
+        refNode.replaceWith(newNode);
+    }
+  
+    content.refs = () => {
+        const refElements = content.querySelectorAll('[ref]');
+        return [...refElements].reduce((acc, element) => {
+            const propName = element.getAttribute('ref').trim();
+            element.removeAttribute('ref');
+            acc[propName] = element;
+            return acc;
+        }, {});
+    };
+  
+    return content;
+  }

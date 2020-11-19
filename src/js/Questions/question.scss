@@ -93,6 +93,23 @@
             }
         }
 
+        &.animated .question-icon {
+            animation-name: drop;
+            animation-duration: .8s;
+            // animation-fill-mode: forwards;
+            animation-timing-function: ease-in;
+        }
+
+        @keyframes drop {
+            from {
+                transform: translateY(-60px) scale(2);
+            }
+
+            to {
+                transform: translateY(-18px) scale(1);
+            }
+        }
+
         &::after {
             content: attr(data-tip);
             position: absolute;

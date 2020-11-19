@@ -1,9 +1,10 @@
 import '@webcomponents/custom-elements';
-import fetchQuestions from "./mockQuestions2";
+import fetchQuestions from "./mockQuestions";
+// import fetchQuestions from "./fetchQuestion";
 import questionPlaceholder from "./questionPlaceholder";
 import { secondsToHours } from "../lib/util";
-// import { fetchQuestions } from "./fetch";
 import { LOG } from "../lib/util";
+import { template } from "../lib/domUtil";
 import { html, render } from "lit-html";
 import "./popup";
 import "./question.scss";
@@ -31,12 +32,8 @@ export default class Question {
         this._EE.on("marker-click", (qId, position) => {
             let question = this._questions.filter(q => q['id'] === qId)[0];
             if(question) {
-                if(!this.editable) {
-                     this.showEditMenu(qId, position);
-                } else {
-                    this.currentQuestion = question;
-                    this.show();
-                }
+                this.currentQuestion = question;
+                this.show();
             }
         });
     }
@@ -149,24 +146,21 @@ export default class Question {
 
         if (percentage > 99) return;
 
-        const template = document.createElement('template');
-        template.innerHTML = `
+        const marker = template`
             <div 
-                class="vken-question-pin" 
+                class="vken-question-pin ${animate && 'animated'}" 
                 data-qid=${question["id"]}
                 data-tip="Question at ${secondsToHours(start)}"
                 style="left: calc(${percentage}% - 8px)"
             >
                 <div class="question-icon"></div>
             </div>
-
         `;
 
-        const marker = template.content;
         marker.addEventListener('click', _ => {
             this._EE.emit("marker-click", question['id'], percentage);
         });
-        this._timeline.appendChild(marker);
+        this._timeline.append(marker);
     }
     
     setupTimelineMarkers() {
@@ -176,7 +170,7 @@ export default class Question {
         }
 
         for (let question of this._questions) {
-            this.insertMarker(question);
+            this.insertMarker(question, true);
         }
 
         this._editMenu = document.createElement('div');

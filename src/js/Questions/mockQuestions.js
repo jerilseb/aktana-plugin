@@ -2,12 +2,23 @@ import { sleep } from "../lib/util";
 
 const data = [
     {   id: 463434,
-        text: "If you don’t specify ASC or DESC after a SQL ORDER BY clause, which is used by default?",
+        text: {
+            "time": 1550476186479,
+            "blocks": [
+               {
+                  "type": "paragraph",
+                  "data": {
+                     "text": "What's the capital of India?"
+                  }
+               }
+            ],
+            "version": "2.8.1"
+         },
         options: [
-            "ASC",
-            "DESC",
-            "There is no default value",
-            "Error will occur"
+            "New Delhi",
+            "Mumbai",
+            "Hyderabad",
+            "None of the above"
         ],
         type: "single",
         correct: [1],
@@ -15,14 +26,18 @@ const data = [
     },
     {
         id: 478729,
-        text: `
-<b>What's the output of the following python code?</b>
-<pre style="background: #dde2ef; padding: 8px">
-<span style="color: #aaaaaa">></span> my_tuple = (1, 2, 3, 4)
-<span style="color: #aaaaaa">></span> my_tuple.append( (5, 6, 7) )
-<span style="color: #aaaaaa">></span> print len(my_tuple)
-</pre>
-        `,
+        text: {
+            "time": 1550476186479,
+            "blocks": [
+               {
+                  "type": "paragraph",
+                  "data": {
+                     "text": ""
+                  }
+               }
+            ],
+            "version": "2.8.1"
+         },
         options: [
             "1",
             "2",
@@ -35,19 +50,18 @@ const data = [
     },
     {
         id: 832955,
-        text: `
-<div style="font-size: .9em">
-<b>What happens in the following javaScript code snippet?</b>
-<pre style="background: #dde2ef; padding: 8px">
-var count = 0;
-while (count < 10) 
-{
-     console.log(count);
-     count++;
-}
-</pre>
-</div>
-        `,
+        text: {
+            "time": 1550476186479,
+            "blocks": [
+               {
+                  "type": "paragraph", 
+                  "data": {
+                     "text": "If you don’t specify ASC or DESC after a SQL ORDER BY clause, which is used by default?"
+                  }
+               }
+            ],
+            "version": "2.8.1"
+         },
         options: [
             "The values of count are logged or stored in a particular location or storage",
             "The value of count from 0 to 9 is displayed in the console",
