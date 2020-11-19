@@ -1,3 +1,1 @@
-customElements.define('q-hint', class extends HTMLElement {
-
-});
+customElements.define("q-hint", class extends HTMLElement {});

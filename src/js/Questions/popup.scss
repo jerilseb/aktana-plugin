@@ -7,7 +7,7 @@
         background: white;
         border-radius: 2px;
         padding: 2em 2.2em 2em 2.2em;
-        box-shadow: -7px 7px 33px -5px rgba(0,0,0,0.45);
+        box-shadow: -7px 7px 33px -5px rgba(0, 0, 0, 0.45);
         pointer-events: auto;
         display: flex;
         flex-direction: column;
@@ -15,7 +15,7 @@
         font-size: 15px;
 
         &.visible {
-            animation-duration: .4s;
+            animation-duration: 0.4s;
             animation-name: appear;
         }
 
@@ -27,12 +27,13 @@
             align-items: center;
             justify-content: center;
             position: absolute;
-            right: .4em;
-            top: .4em;
+            right: 0.4em;
+            top: 0.4em;
             cursor: pointer;
         }
 
-        .submit-button, .save-button {
+        .submit-button,
+        .save-button {
             width: 6em;
             height: 2.2em;
             background: #227fd6;
@@ -43,7 +44,7 @@
             color: #ffffff;
             align-items: center;
             justify-content: center;
-            letter-spacing: .03em;
+            letter-spacing: 0.03em;
             border-radius: 3px;
         }
 
@@ -73,9 +74,9 @@
             cursor: pointer;
 
             &::before {
-                content: 'RESUME';
+                content: "RESUME";
                 font-weight: 500;
-                margin: .25em;
+                margin: 0.25em;
             }
         }
 
@@ -86,13 +87,13 @@
         }
 
         #q-text {
-            margin-bottom: .8em;
+            margin-bottom: 0.8em;
             max-height: 9em;
             overflow-y: scroll;
             background: #fafafa;
             border: 1px solid #cccccc;
-            padding: .8em;
-            font-size: .9em;
+            padding: 0.8em;
+            font-size: 0.9em;
             overflow-x: hidden;
 
             &::-webkit-scrollbar {
@@ -117,8 +118,8 @@
             align-items: center;
             justify-content: center;
             background: #444444;
-            left: -.6em;
-            top: -.6em;
+            left: -0.6em;
+            top: -0.6em;
             color: #ffffff;
             border-radius: 2px;
         }

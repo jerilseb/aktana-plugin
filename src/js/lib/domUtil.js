@@ -12,20 +12,23 @@ import { LOG, debounce } from "./util";
 // }
 
 export function waitForElementInsertion(parent, selector) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
         observerName = `Insert ${selector}`;
-        currentObserver = new MutationObserver(mutations => {
-            requestIdleCallback(_ => {
-                for(let mutation of mutations) {
-                    for(let addedNode of mutation.addedNodes) {
-                        if (addedNode.nodeType === 1 && addedNode.matches(selector)) {
-                            // LOG("Inserted element", selector);
-                            clearElementObserver();
-                            resolve(addedNode);
+        currentObserver = new MutationObserver((mutations) => {
+            requestIdleCallback(
+                (_) => {
+                    for (let mutation of mutations) {
+                        for (let addedNode of mutation.addedNodes) {
+                            if (addedNode.nodeType === 1 && addedNode.matches(selector)) {
+                                // LOG("Inserted element", selector);
+                                clearElementObserver();
+                                resolve(addedNode);
+                            }
                         }
                     }
-                }
-            }, {timeout: 2000});
+                },
+                { timeout: 2000 }
+            );
         });
         currentObserver.observe(parent, { childList: true, subtree: true });
         LOG("Waiting for element Insertion:", selector);
@@ -33,30 +36,34 @@ export function waitForElementInsertion(parent, selector) {
 }
 
 export function waitForElementRemoval(parent, selector) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
         observerName = `Remove ${selector}`;
-        currentObserver = new MutationObserver(mutations => {
-            requestIdleCallback(_ => {
-                for(let mutation of mutations) {
-                    for(let removedNode of mutation.removedNodes) {
-                        if (removedNode.nodeType === 1 && removedNode.matches(selector)) {
-                            // LOG("Inserted element", selector);
-                            clearElementObserver();
-                            resolve(addedNode);
+        currentObserver = new MutationObserver((mutations) => {
+            requestIdleCallback(
+                (_) => {
+                    for (let mutation of mutations) {
+                        for (let removedNode of mutation.removedNodes) {
+                            if (removedNode.nodeType === 1 && removedNode.matches(selector)) {
+                                // LOG("Inserted element", selector);
+                                clearElementObserver();
+                                resolve(addedNode);
+                            }
                         }
                     }
-                }
-            }, {timeout: 2000});
+                },
+                { timeout: 2000 }
+            );
         });
         currentObserver.observe(parent, { childList: true, subtree: true });
         LOG("Waiting for element Removal:", selector);
     });
 }
 
-let currentObserver = null, observerName = null;
+let currentObserver = null,
+    observerName = null;
 
 export function clearElementObserver() {
-    if(currentObserver) {
+    if (currentObserver) {
         LOG("Clearing observer:", observerName);
         clearTimeout(currentObserver);
         currentObserver = null;
@@ -65,19 +72,18 @@ export function clearElementObserver() {
 }
 
 export function waitForElement(parent, selector) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
         LOG("Waiting for element:", selector);
         (function loop() {
             observerName = selector;
             currentObserver = setTimeout(() => {
                 requestIdleCallback(() => {
                     let el = parent.querySelector(selector);
-                    if(el) {
+                    if (el) {
                         LOG("Element available:", selector);
                         clearElementObserver();
                         resolve(el);
-                    }
-                    else {
+                    } else {
                         loop();
                     }
                 });
@@ -91,8 +97,8 @@ export function waitForElement(parent, selector) {
 // https://stackoverflow.com/questions/60593551/get-the-new-attribute-value-for-the-current-mutationrecord-when-using-mutationob
 
 export function watchForAttributeChange(element, attribute, callback) {
-    const observer = new MutationObserver(mutations => {
-        for(let mutation of mutations) {
+    const observer = new MutationObserver((mutations) => {
+        for (let mutation of mutations) {
             callback(mutation.oldValue);
         }
     });
@@ -100,7 +106,7 @@ export function watchForAttributeChange(element, attribute, callback) {
         attributeFilter: [attribute],
         attributeOldValue: true,
         childList: false,
-        subtree: false
+        subtree: false,
     });
 }
 
@@ -117,25 +123,25 @@ export function template(strings, ...args) {
         }
     }
     result += strings[strings.length - 1];
-  
+
     const template = document.createElement(`template`);
     template.innerHTML = result;
     const content = template.content;
 
-    for(let refNode of content.querySelectorAll('[replace]')) {
-        const newNode = placeholders[refNode.getAttribute('replace')];
+    for (let refNode of content.querySelectorAll("[replace]")) {
+        const newNode = placeholders[refNode.getAttribute("replace")];
         refNode.replaceWith(newNode);
     }
-  
+
     content.refs = () => {
-        const refElements = content.querySelectorAll('[ref]');
+        const refElements = content.querySelectorAll("[ref]");
         return [...refElements].reduce((acc, element) => {
-            const propName = element.getAttribute('ref').trim();
-            element.removeAttribute('ref');
+            const propName = element.getAttribute("ref").trim();
+            element.removeAttribute("ref");
             acc[propName] = element;
             return acc;
         }, {});
     };
-  
+
     return content;
-  }
+}

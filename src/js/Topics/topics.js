@@ -4,11 +4,10 @@ import { LOG } from "../lib/util";
 import "./topics.scss";
 
 export default class Topics {
-
     constructor(EE) {
         this._EE = EE;
     }
-    
+
     setupControls(container, controlBar) {
         this._container = container;
         this._controlBar = controlBar;
@@ -17,14 +16,14 @@ export default class Topics {
     async getTopcis(videoId) {
         this._topics = await fetchTopics(videoId);
 
-        if(this._topics) {
-            let addQuestionDiv = document.createElement('div');
-            addQuestionDiv.setAttribute('class', 'vjs-control vjs-button vken-topics-button');
+        if (this._topics) {
+            let addQuestionDiv = document.createElement("div");
+            addQuestionDiv.setAttribute("class", "vjs-control vjs-button vken-topics-button");
 
             let playbackRateButton = this._controlBar.querySelector(".vjs-playback-rate");
-            playbackRateButton.insertAdjacentElement('beforebegin', addQuestionDiv);
+            playbackRateButton.insertAdjacentElement("beforebegin", addQuestionDiv);
 
-            addQuestionDiv.addEventListener('click', event => {
+            addQuestionDiv.addEventListener("click", (event) => {
                 LOG("Topics Button clicked");
                 this._popup.show();
             });

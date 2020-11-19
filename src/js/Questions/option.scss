@@ -2,28 +2,28 @@
     q-option {
         display: flex;
         flex-direction: row;
-        margin: .5em .2em .2em .2em;
+        margin: 0.5em 0.2em 0.2em 0.2em;
         font-size: 15px;
         align-items: center;
-    
+
         * {
             box-sizing: border-box;
         }
 
         .option-text {
             display: inline-block;
-            margin-left: .7em;
-            padding: 0 .3em;
+            margin-left: 0.7em;
+            padding: 0 0.3em;
             border-radius: 3px;
             // border-bottom: 1px solid #ffffff;
         }
-        
+
         .checkbox {
             box-sizing: border-box;
-            border-width: .15em;
+            border-width: 0.15em;
             border-color: #999999;
             border-style: solid;
-            border-radius: .1em;
+            border-radius: 0.1em;
             width: 1.2em;
             height: 1.2em;
             display: inline-block;
@@ -31,30 +31,31 @@
             background-size: 1.2em;
             background-repeat: round;
         }
-        
+
         &[type="single"] .checkbox {
             border-radius: 50%;
         }
-        
+
         &[type="single"][selected] .checkbox {
-            border-width: .35em;
+            border-width: 0.35em;
         }
-        
+
         &[status="active"] .checkbox {
             cursor: pointer;
         }
-        
+
         &[status="active"] .checkbox:hover {
             border-color: #666666;
             transform: scale(1.05);
         }
-        
-        &[selected] .checkbox, q-option[selected] .checkbox:hover {
+
+        &[selected] .checkbox,
+        q-option[selected] .checkbox:hover {
             border-color: #227fd6;
         }
 
         &[editable] .option-text:hover {
-            cursor: svg-load('../../icons/cursor/pencil.svg'), pointer;
+            cursor: svg-load("../../icons/cursor/pencil.svg"), pointer;
             background-color: #eaeaea;
             // border-bottom: 1px solid #cccccc;
         }
@@ -67,18 +68,19 @@
 
         &[type="multi"][selected] .checkbox {
             border: none;
-            background-image: svg-load('../../icons/tick.svg', fill=#227fd6);
+            background-image: svg-load("../../icons/tick.svg", fill=#227fd6);
         }
-        
-        &[status="correct"] div.checkbox, &[selected][editable] div.checkbox {
+
+        &[status="correct"] div.checkbox,
+        &[selected][editable] div.checkbox {
             border: none;
-            background-image: svg-load('../../icons/tick.svg', fill=#18b574);
+            background-image: svg-load("../../icons/tick.svg", fill=#18b574);
             cursor: pointer;
         }
-        
+
         &[status="wrong"] div.checkbox {
             border: none;
-            background-image: svg-load('../../icons/cross.svg');
+            background-image: svg-load("../../icons/cross.svg");
         }
     }
 }

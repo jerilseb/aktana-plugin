@@ -19,10 +19,10 @@ const data = {
     2264: "Standard Deluxe + Custom Tests",
     2358: "Create Service & NXT Master Logins for School",
     2468: "Ticket Log between AM/SS/BizOPS",
-    2745: "Wrap Up"
-}
+    2745: "Wrap Up",
+};
 
-export default async function() {
+export default async function () {
     const _data = JSON.parse(JSON.stringify(data));
     await sleep(1000);
     return _data;

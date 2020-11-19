@@ -2,7 +2,7 @@
     .vken-topics-button {
         cursor: pointer;
         margin: 0 3px;
-        background-image: svg-load('../../icons/topics.svg');
+        background-image: svg-load("../../icons/topics.svg");
         width: 20px;
         height: 20px;
 
@@ -37,7 +37,7 @@
 .ytp-reset-div {
     display: none;
     position: absolute;
-    top:0;
+    top: 0;
     bottom: 55px;
     left: 0;
     right: 0;
@@ -59,10 +59,10 @@ div.ytp-topics-popup.active ~ .ytp-reset-div {
     max-height: calc(97% - 75px);
     width: calc(130px + 26%);
     max-width: 410px;
-    background: rgba(28,28,28,0.92);
+    background: rgba(28, 28, 28, 0.92);
 
     &::before {
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
         left: 0;
@@ -73,7 +73,7 @@ div.ytp-topics-popup.active ~ .ytp-reset-div {
     }
 
     &::after {
-        content: '';
+        content: "";
         position: absolute;
         bottom: 0;
         left: 0;
@@ -86,7 +86,6 @@ div.ytp-topics-popup.active ~ .ytp-reset-div {
     &.active {
         display: flex;
     }
-
 
     .popup-content {
         overflow-y: scroll;
@@ -103,7 +102,7 @@ div.ytp-topics-popup.active ~ .ytp-reset-div {
         }
 
         &::-webkit-scrollbar-track {
-            background: rgb(28,28,28);
+            background: rgb(28, 28, 28);
         }
 
         .empty {
@@ -116,7 +115,7 @@ div.ytp-topics-popup.active ~ .ytp-reset-div {
             display: flex;
             flex-direction: row;
             cursor: pointer;
-            padding: .6em .7em;
+            padding: 0.6em 0.7em;
             line-height: 1.4;
             color: #ececec;
 
@@ -139,7 +138,7 @@ div.ytp-topics-popup.active ~ .ytp-reset-div {
             .ytp-topic-dot {
                 flex: 2;
             }
-            
+
             .ytp-topic-text {
                 flex: 30;
                 padding-right: 5px;

@@ -1,4 +1,4 @@
-import '@webcomponents/custom-elements';
+import "@webcomponents/custom-elements";
 import fetchQuestions from "./mockQuestions";
 // import fetchQuestions from "./fetchQuestion";
 import questionPlaceholder from "./questionPlaceholder";
@@ -10,18 +10,17 @@ import "./popup";
 import "./question.scss";
 
 export default class Question {
-
     constructor(EE) {
         this._questions = [];
         this._currentQuestion = null;
         this._EE = EE;
 
-        this._EE.on("time-update", currentTime => {
-            if(this.editable || this.visible) return;
-            
+        this._EE.on("time-update", (currentTime) => {
+            if (this.editable || this.visible) return;
+
             for (let question of this._questions) {
-                const [start, end] = question['time'];
-                if(!question.shown && currentTime >= start && currentTime <= end) {
+                const [start, end] = question["time"];
+                if (!question.shown && currentTime >= start && currentTime <= end) {
                     this.currentQuestion = question;
                     this.show();
                     break;
@@ -30,8 +29,8 @@ export default class Question {
         });
 
         this._EE.on("marker-click", (qId, position) => {
-            let question = this._questions.filter(q => q['id'] === qId)[0];
-            if(question) {
+            let question = this._questions.filter((q) => q["id"] === qId)[0];
+            if (question) {
                 this.currentQuestion = question;
                 this.show();
             }
@@ -41,7 +40,8 @@ export default class Question {
     get template() {
         return html`
             <div class="questions-container">
-                <q-popup ?editable=${this.editable} 
+                <q-popup
+                    ?editable=${this.editable}
                     @close=${() => this.closeAndPlay()}
                     @save=${() => this.saveQuestion()}
                 ></q-popup>
@@ -53,20 +53,19 @@ export default class Question {
         this._video = video;
         this._container = container;
         this._controlBar = controlBar;
-        this._timeline = this._container.querySelector('.vjs-progress-control');
-
+        this._timeline = this._container.querySelector(".vjs-progress-control");
 
         this.render();
-        this._el = container.querySelector('.questions-container');
-        this._popupEl = this._el.querySelector('q-popup');
+        this._el = container.querySelector(".questions-container");
+        this._popupEl = this._el.querySelector("q-popup");
     }
 
     render() {
         LOG("Rendering popup");
         let div = this._container.querySelector("#vken-controls");
-        if(!div) {
-            div = document.createElement('div');
-            div.setAttribute('id', 'vken-controls');
+        if (!div) {
+            div = document.createElement("div");
+            div.setAttribute("id", "vken-controls");
             this._container.append(div);
         }
         render(this.template, div);
@@ -76,7 +75,7 @@ export default class Question {
         this.visible = false;
         this._video.play();
     }
-    
+
     set currentQuestion(question) {
         LOG("Setting question", question);
         this._currentQuestion = question;
@@ -94,12 +93,12 @@ export default class Question {
     }
 
     get visible() {
-        return this._el.classList.contains('visible');
+        return this._el.classList.contains("visible");
     }
 
     set visible(value) {
         this._popupEl.visible = !!value;
-        this._el.classList.toggle('visible', !!value);
+        this._el.classList.toggle("visible", !!value);
     }
 
     get editable() {
@@ -109,12 +108,12 @@ export default class Question {
     set editable(value) {
         this._editable = !!value;
 
-        let addQuestionDiv = document.createElement('div');
-        addQuestionDiv.setAttribute('class', 'vjs-control vjs-button vken-add-question-icon');
+        let addQuestionDiv = document.createElement("div");
+        addQuestionDiv.setAttribute("class", "vjs-control vjs-button vken-add-question-icon");
         let playbackRateButton = this._controlBar.querySelector(".vjs-playback-rate");
-        playbackRateButton.insertAdjacentElement('beforebegin', addQuestionDiv);
+        playbackRateButton.insertAdjacentElement("beforebegin", addQuestionDiv);
 
-        addQuestionDiv.addEventListener('click', event => {
+        addQuestionDiv.addEventListener("click", (event) => {
             LOG("Add icon clicked");
             this.currentQuestion = questionPlaceholder;
             this._video.pause();
@@ -128,19 +127,25 @@ export default class Question {
     async saveQuestion() {
         this.visible = false;
         let { id, text, options, correct } = await this._popupEl.editedQuestion();
-        
-        if(id === -1) {
+
+        if (id === -1) {
             let time = this._video.currentTime;
             LOG("This is a new question");
         }
 
-        let question = { text, options, correct, type: "single", time: [time, time + 5]};
+        let question = {
+            text,
+            options,
+            correct,
+            type: "single",
+            time: [time, time + 5],
+        };
 
         LOG(text, options, correct);
     }
 
     insertMarker(question, animate = false) {
-        const [start, _] = question['time'];
+        const [start, _] = question["time"];
         const duration = parseInt(this._video.duration);
         const percentage = ((start / duration) * 100).toFixed(2);
 
@@ -148,7 +153,7 @@ export default class Question {
 
         const marker = template`
             <div 
-                class="vken-question-pin ${animate && 'animated'}" 
+                class="vken-question-pin ${animate && "animated"}" 
                 data-qid=${question["id"]}
                 data-tip="Question at ${secondsToHours(start)}"
                 style="left: calc(${percentage}% - 8px)"
@@ -157,14 +162,14 @@ export default class Question {
             </div>
         `;
 
-        marker.addEventListener('click', _ => {
-            this._EE.emit("marker-click", question['id'], percentage);
+        marker.addEventListener("click", (_) => {
+            this._EE.emit("marker-click", question["id"], percentage);
         });
         this._timeline.append(marker);
     }
-    
+
     setupTimelineMarkers() {
-        if(!this._timeline) {
+        if (!this._timeline) {
             LOG("Timeline not ready, skipping markers");
             return;
         }
@@ -173,8 +178,8 @@ export default class Question {
             this.insertMarker(question, true);
         }
 
-        this._editMenu = document.createElement('div');
-        this._editMenu.setAttribute('class', "vken-question-edit-menu");
+        this._editMenu = document.createElement("div");
+        this._editMenu.setAttribute("class", "vken-question-edit-menu");
         this._controlBar.append(this._editMenu);
     }
 
@@ -183,14 +188,14 @@ export default class Question {
         this._questions = await fetchQuestions(videoId);
         LOG("Questions fetched", this._questions);
 
-        if(this._questions.length > 0) {
+        if (this._questions.length > 0) {
             LOG("Setting up timeline Markers");
             this.setupTimelineMarkers();
         }
     }
 
     showEditMenu(qId, position) {
-        const menu = document.createElement('div');
-        menu.setAttribute('class', "vken-question-edit-menu");
+        const menu = document.createElement("div");
+        menu.setAttribute("class", "vken-question-edit-menu");
     }
 }

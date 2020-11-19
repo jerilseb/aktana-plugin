@@ -2,12 +2,12 @@
     * {
         box-sizing: content-box;
     }
-    
+
     q-popup:not([editable]) .codex-editor__redactor {
         padding-bottom: 0 !important;
     }
 
-     use {
+    use {
         fill-opacity: unset;
         stroke-opacity: unset;
         fill: unset;
@@ -15,7 +15,7 @@
     }
 
     .cdx-block {
-        padding: .2em 0;
+        padding: 0.2em 0;
     }
 
     .questions-container {
@@ -27,15 +27,15 @@
         display: none;
         justify-content: center;
         align-items: center;
-        background: rgba(0,0,0,0.3);
+        background: rgba(0, 0, 0, 0.3);
         /* pointer-events: none; */
         z-index: 72;
-    
+
         &.visible {
             display: flex;
             pointer-events: auto;
         }
-    
+
         .questions-div {
             position: absolute;
             width: calc(100% - 120px);
@@ -44,9 +44,9 @@
             background: white;
             border-radius: 3px;
             padding: 3em 2.2em;
-            box-shadow: -7px 7px 33px -5px rgba(0,0,0,0.45);
+            box-shadow: -7px 7px 33px -5px rgba(0, 0, 0, 0.45);
             pointer-events: auto;
-    
+
             .close-button {
                 width: 1.4em;
                 height: 1.4em;
@@ -57,11 +57,11 @@
                 border-radius: 50%;
                 padding: 0.3em;
                 position: absolute;
-                right: -.7em;
-                top: -.7em;
-                background:#4a4a4a;
+                right: -0.7em;
+                top: -0.7em;
+                background: #4a4a4a;
                 cursor: pointer;
-    
+
                 svg {
                     transform: scale(0.75);
                 }
@@ -74,14 +74,13 @@
     display: none !important;
 }
 
-
 .vjs-control-bar {
     .vken-question-pin {
         .question-icon {
             width: 20px;
             height: 20px;
             position: absolute;
-            background-image: svg-load('../../icons/question.svg');
+            background-image: svg-load("../../icons/question.svg");
             background-repeat: no-repeat;
             transform: translateY(-18px);
             transform-origin: bottom;
@@ -95,7 +94,7 @@
 
         &.animated .question-icon {
             animation-name: drop;
-            animation-duration: .8s;
+            animation-duration: 0.8s;
             // animation-fill-mode: forwards;
             animation-timing-function: ease-in;
         }
@@ -117,7 +116,7 @@
             justify-content: center;
             align-items: center;
             width: 8.5em;
-            padding: .5em;
+            padding: 0.5em;
             background: rgba(10, 10, 10, 0.75);
             transform: translate(-4em, -5.5em);
             color: #fff;
@@ -134,14 +133,14 @@
 
     .vjs-control.vken-add-question-icon {
         cursor: pointer;
-        background-image: svg-load('../../icons/plus.svg');
+        background-image: svg-load("../../icons/plus.svg");
         width: 20px;
         height: 20px;
-    
+
         &:hover {
             transform: scale(1.2);
         }
-    
+
         &::after {
             content: "Add Question";
             position: absolute;
@@ -159,12 +158,12 @@
             font-weight: 500;
             letter-spacing: -0.3px;
         }
-    
+
         &:hover::after {
             display: flex;
         }
     }
-    
+
     .vken-question-edit-menu {
         position: absolute;
         width: 100px;
