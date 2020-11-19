@@ -1,5 +1,5 @@
 import { LOG } from "../lib/util";
-import "./Option";
+import "./option";
 
 customElements.define(
     "q-options",
