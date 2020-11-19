@@ -148,24 +148,28 @@ export default class Question {
         const [start, _] = question["time"];
         const duration = parseInt(this._video.duration);
         const percentage = ((start / duration) * 100).toFixed(2);
-
+        
         if (percentage > 99) return;
-
-        const marker = template`
-            <div 
-                class="vken-question-pin ${animate && "animated"}" 
-                data-qid=${question["id"]}
-                data-tip="Question at ${secondsToHours(start)}"
-                style="left: calc(${percentage}% - 8px)"
-            >
-                <div class="question-icon"></div>
-            </div>
+        
+        let el = template`
+        <div
+            ref="marker"
+            class="vken-question-pin ${animate && "animated"}" 
+            data-qid=${question["id"]}
+            data-tip="Question at ${secondsToHours(start)}"
+            style="left: calc(${percentage}% - 8px)"
+        >
+            <div class="question-icon"></div>
+        </div>
         `;
-
+        
+        const { marker } = el.refs();
         marker.addEventListener("click", (_) => {
+            LOG("Clicked on Marker");
             this._EE.emit("marker-click", question["id"], percentage);
         });
-        this._timeline.append(marker);
+        
+        this._timeline.append(el);
     }
 
     setupTimelineMarkers() {

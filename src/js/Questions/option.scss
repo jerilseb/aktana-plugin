@@ -1,4 +1,8 @@
 #vken-controls {
+    q-options[editable] {
+        margin-left: -1.8em;
+    }
+
     q-option {
         display: flex;
         flex-direction: row;
@@ -8,14 +12,6 @@
 
         * {
             box-sizing: border-box;
-        }
-
-        .option-text {
-            display: inline-block;
-            margin-left: 0.7em;
-            padding: 0 0.3em;
-            border-radius: 3px;
-            // border-bottom: 1px solid #ffffff;
         }
 
         .checkbox {
@@ -49,21 +45,9 @@
             transform: scale(1.05);
         }
 
-        &[selected] .checkbox,
-        q-option[selected] .checkbox:hover {
+        &[selected] .checkbox.checkbox,
+        &[selected] .checkbox.checkbox:hover {
             border-color: #227fd6;
-        }
-
-        &[editable] .option-text:hover {
-            cursor: svg-load("../../icons/cursor/pencil.svg"), pointer;
-            background-color: #eaeaea;
-            // border-bottom: 1px solid #cccccc;
-        }
-
-        &[editable] .option-text:focus {
-            cursor: text;
-            background-color: #eaeaea;
-            // border-bottom: 1px solid #cccccc;
         }
 
         &[type="multi"][selected] .checkbox {
@@ -75,12 +59,76 @@
         &[selected][editable] div.checkbox {
             border: none;
             background-image: svg-load("../../icons/tick.svg", fill=#18b574);
-            cursor: pointer;
         }
 
         &[status="wrong"] div.checkbox {
             border: none;
-            background-image: svg-load("../../icons/cross.svg");
+            background-image: svg-load("../../icons/wrong.svg");
+        }
+
+        &[editable] .checkbox:hover {
+            border: none;
+            background-image: svg-load("../../icons/tick.svg", fill=#adadad);
+            
+            // &::before {
+            //     display: block;
+            //     text-align: center;
+            //     content: 'Mark as correct';
+            //     padding: 4px;
+            //     transform: translate(-17ch, -4px);
+            //     font-size: 10px;
+            //     width: 14ch;
+            //     background: #ffffff;
+            //     border: 1px solid #bbbbbb;
+            //     border-radius: 3px;
+            // }
+        }
+
+        .option-text {
+            display: inline-block;
+            margin-left: 0.7em;
+            padding: 0 0.3em;
+            border-radius: 3px;
+            min-width: 2ch;
+        }
+
+        &[status="active"] .option-text:hover {
+            cursor: pointer;
+        }
+
+        &[editable] .option-text:hover {
+            cursor: pointer;
+            background-color: #eaeaea;
+            // border-bottom: 1px solid #cccccc;
+        }
+
+        &[editable] .option-text:focus {
+            cursor: text;
+            background-color: #eaeaea;
+            // border-bottom: 1px solid #cccccc;
+        }
+
+        &[editable] .option-text:empty:not(:focus) {
+            background: #eaeaea;
+            // border-bottom: rgb(255, 153, 153)id #cccccc;
+        }
+
+        &[editable] .edit-button {
+            margin-right: .8em;
+            cursor: pointer;
+            background-image: svg-load('../../icons/dots.svg');
+            background-color: #eaeaea;
+            width: 11px;
+            height: 11px;
+            padding: 4px;
+            border: 4px solid #eaeaea;
+            border-radius: 3px;
+            opacity: 0;
+            transition: opacity .1s linear;
+        }
+
+        &[editable]:hover .edit-button {
+            opacity: 1;
         }
     }
 }

@@ -1,19 +1,23 @@
-const template = document.createElement("template");
 import "./option.scss";
-
-template.innerHTML = `
-    <div class="checkbox"></div>
-    <div class="option-text"></div>
-`;
+import { template } from "../lib/domUtil";
 
 customElements.define(
     "q-option",
     class extends HTMLElement {
         set text(value) {
-            this.appendChild(template.content.cloneNode(true));
+            let el = template`
+                <div ref="editButton" class="edit-button"></div>
+                <div ref="checkBox" class="checkbox"></div>
+                <div ref="optionText" class="option-text"></div>            
+            `;
 
-            this.checkBox = this.querySelector(".checkbox");
-            this.checkBox.addEventListener("click", (event) => {
+            let { checkBox, editButton, optionText } = el.refs();
+            this.appendChild(el);
+
+            this._text = optionText;
+            this._text.textContent = value;
+            
+            checkBox.addEventListener("click", (_) => {
                 if (this.status === "active") {
                     this.dispatchEvent(
                         new CustomEvent("option-change", {
@@ -23,9 +27,6 @@ customElements.define(
                     );
                 }
             });
-
-            this._text = this.querySelector("div.option-text");
-            this._text.textContent = value;
         }
 
         get text() {

@@ -1,0 +1,6 @@
+<svg id="dots" viewBox="0 0 8 8">
+  <circle cx="6.5" cy="1.5" r="1.5" fill="#888888"></circle>
+  <circle cx="6.5" cy="6.5" r="1.5" fill="#888888"></circle>
+  <circle cx="1.5" cy="1.5" r="1.5" fill="#888888"></circle>
+  <circle cx="1.5" cy="6.5" r="1.5" fill="#888888"></circle>
+</svg>
