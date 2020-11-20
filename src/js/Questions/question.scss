@@ -76,6 +76,8 @@
 
 .vjs-control-bar {
     .vken-question-pin {
+        position: absolute;
+
         .question-icon {
             width: 20px;
             height: 20px;
@@ -101,7 +103,7 @@
 
         @keyframes drop {
             from {
-                transform: translateY(-60px) scale(2);
+                transform: translateY(-75px) scale(2.5);
             }
 
             to {
@@ -162,14 +164,5 @@
         &:hover::after {
             display: flex;
         }
-    }
-
-    .vken-question-edit-menu {
-        position: absolute;
-        width: 100px;
-        height: 50px;
-        background: #ffffff;
-        border-radius: 4px;
-        transform: translateY(-70px);
     }
 }

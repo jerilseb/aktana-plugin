@@ -6,7 +6,8 @@ customElements.define(
     class extends HTMLElement {
         set text(value) {
             let el = template`
-                <div ref="editButton" class="edit-button"></div>
+                <div ref="editButton" class="edit-button">
+                </div>
                 <div ref="checkBox" class="checkbox"></div>
                 <div ref="optionText" class="option-text"></div>            
             `;
@@ -26,6 +27,18 @@ customElements.define(
                         })
                     );
                 }
+            });
+
+            editButton.addEventListener("click", event => {
+                event.stopPropagation();
+                
+                if(!this.editable) return;
+                this.dispatchEvent(
+                    new CustomEvent("option-edit", {
+                        bubbles: true,
+                        composed: true
+                    })
+                );
             });
         }
 
@@ -58,6 +71,14 @@ customElements.define(
             this._text.toggleAttribute("contenteditable", !!value);
         }
 
+        get editing() {
+            return this.hasAttribute("editing");
+        }
+
+        set editing(value) {
+            this.toggleAttribute("editing", !!value);
+        }
+
         set type(value) {
             this.setAttribute("type", value);
         }
@@ -76,14 +97,6 @@ customElements.define(
 
         disable() {
             this.removeAttribute("status");
-        }
-
-        markCorrect() {
-            this.status = "correct";
-        }
-
-        markWrong() {
-            this.status = "wrong";
         }
     }
 );

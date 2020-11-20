@@ -129,26 +129,23 @@ export default class Question {
         let { id, text, options, correct } = await this._popupEl.editedQuestion();
 
         if (id === -1) {
-            let time = this._video.currentTime;
-            LOG("This is a new question");
+            let time = parseInt(this._video.currentTime);
+            let question = {
+                text,
+                options,
+                correct,
+                type: "single",
+                time: [time, time + 5],
+            };
+    
+            this.insertMarker(question, true);
         }
-
-        let question = {
-            text,
-            options,
-            correct,
-            type: "single",
-            time: [time, time + 5],
-        };
-
-        LOG(text, options, correct);
     }
 
-    insertMarker(question, animate = false) {
+    insertMarker(duration, question, animate = false) {
         const [start, _] = question["time"];
-        const duration = parseInt(this._video.duration);
         const percentage = ((start / duration) * 100).toFixed(2);
-        
+
         if (percentage > 99) return;
         
         let el = template`
@@ -164,27 +161,24 @@ export default class Question {
         `;
         
         const { marker } = el.refs();
+        this._timeline.append(el);
+
         marker.addEventListener("click", (_) => {
             LOG("Clicked on Marker");
             this._EE.emit("marker-click", question["id"], percentage);
         });
-        
-        this._timeline.append(el);
     }
 
-    setupTimelineMarkers() {
+    async setupTimelineMarkers() {
         if (!this._timeline) {
             LOG("Timeline not ready, skipping markers");
             return;
         }
+        const duration = await waitForDuration(this._video);
 
         for (let question of this._questions) {
-            this.insertMarker(question, true);
+            this.insertMarker(duration, question, false);
         }
-
-        this._editMenu = document.createElement("div");
-        this._editMenu.setAttribute("class", "vken-question-edit-menu");
-        this._controlBar.append(this._editMenu);
     }
 
     async getQuestionsForVideo(videoId) {
@@ -197,9 +191,17 @@ export default class Question {
             this.setupTimelineMarkers();
         }
     }
-
-    showEditMenu(qId, position) {
-        const menu = document.createElement("div");
-        menu.setAttribute("class", "vken-question-edit-menu");
-    }
 }
+
+function waitForDuration(video) {
+    return new Promise(resolve => {
+        let timer = setInterval(() => {
+            let { duration } = video;
+            if(duration) {
+                clearInterval(timer);
+                resolve(parseInt(duration));
+            }
+        }, 200);
+    })
+}
+

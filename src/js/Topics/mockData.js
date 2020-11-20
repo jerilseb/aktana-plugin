@@ -1,14 +1,12 @@
 import { sleep } from "../lib/util";
 
 const data = {
-    0: "NIT Institutional Journey",
-    48: "Curriculum Creation & Customization",
-    84: "Onboarding: Contract Signed -Add Shared Contract",
-    224: "Create Institution",
-    267: "Booking ID",
+    30: "Learning Objectives",
+    240: "Aktana DSE at a Glance",
+    690: "DSE: Actors",
     616: "Identifying Billing Method",
     741: "Bookstore pay",
-    830: "Institutional Pay",
+    1547: "DSE: Anatomy of a Suggestion",
     947: "Setup Student Pay(Not Applicable)",
     1181: "Set Up Institution",
     1251: "Examples",
@@ -19,7 +17,7 @@ const data = {
     2264: "Standard Deluxe + Custom Tests",
     2358: "Create Service & NXT Master Logins for School",
     2468: "Ticket Log between AM/SS/BizOPS",
-    2745: "Wrap Up",
+    2745: "Wrap Up"
 };
 
 export default async function () {

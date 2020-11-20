@@ -9,35 +9,16 @@ const data = [
                 {
                     type: "paragraph",
                     data: {
-                        text: "What's the capital of India?",
+                        text: "Which is the main part of Aktana Decision Support Suite",
                     },
                 },
             ],
             version: "2.8.1",
         },
-        options: ["New Delhi", "Mumbai", "Hyderabad", "None of the above"],
+        options: ["Market Data & Insights", "MCM and Field Activity", "Non Personal Channel Actions", "None of the above"],
         type: "single",
         correct: [1],
-        time: [120, 125],
-    },
-    {
-        id: 478729,
-        text: {
-            time: 1550476186479,
-            blocks: [
-                {
-                    type: "paragraph",
-                    data: {
-                        text: "",
-                    },
-                },
-            ],
-            version: "2.8.1",
-        },
-        options: ["1", "2", "5", "Error"],
-        type: "single",
-        correct: [2],
-        time: [240, 245],
+        time: [650, 655],
     },
     {
         id: 832955,
@@ -61,7 +42,7 @@ const data = [
         ],
         type: "single",
         correct: [1],
-        time: [360, 365],
+        time: [2360, 2365],
     },
 ];
 
