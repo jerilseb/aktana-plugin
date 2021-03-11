@@ -1,5 +1,5 @@
 import { LOG } from "../lib/util";
-import "./option";
+import "./Option";
 import { template } from "../lib/domUtil";
 
 
@@ -42,7 +42,7 @@ customElements.define(
             this.addEventListener("option-edit", event => {
                 let show = !event.target.editing
                 this.resetEdit();
-                
+
                 if(show) {
                     event.target.editing = true;
                     this.showEditPopup(this.qOptions.indexOf(event.target) , event.target.offsetTop);
@@ -73,7 +73,7 @@ customElements.define(
         resetEdit() {
             for( let qOption of this.qOptions) {
                 qOption.editing = false;
-            }        
+            }
         }
 
         set type(value) {
@@ -111,7 +111,7 @@ customElements.define(
             let options = values.map((optionText, idx) => {
                 const qOption = this.createOption(optionText);
                 qOption.index = idx;
-                return qOption;  
+                return qOption;
             }) ;
 
             this.append(...options);

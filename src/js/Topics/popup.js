@@ -1,222 +1,143 @@
-import { secondsToHours, debounce } from "../lib/util";
+import { LOG, secondsToHours } from "../lib/util";
+import { template } from "../lib/domUtil";
+import { API_BASE } from "../lib/API";
+import "./popup.scss";
 
 export default class Popup {
-    constructor(EE, container) {
-        this._topics = null;
-        this._topicTimes = null;
-        this._playingTopic = null;
-        this._playingRow = null;
-        this._isOpen = false;
-        this._container = container;
-        // this._isSearching = false;
 
-        const template = document.createElement("template");
-        template.innerHTML = `
-          <div class="ytp-popup ytp-topics-popup">
-            <div class="popup-content"></div>
-          </div>
+    constructor(EE, video, controlBar) {
+        this.video = video;
+        this.controlBar = controlBar;
+
+        const html = template`
+            <div ref="el" class="vken-popup vken-topics-popup">
+                <div ref="content" class="popup-content"></div>
+            </div>
         `;
-        this._el = template.content.firstElementChild;
-        container.append(this._el);
 
-        this._el.addEventListener("mousewheel", (event) => event.stopImmediatePropagation());
-        this._el.addEventListener("keydown", (event) => event.stopPropagation());
+        const { el, content } = html.refs();
+        video.parentElement.append(el);
 
-        // this._searchInput = this._el.querySelector('.search-input');
-        this._popupContent = this._el.querySelector(".popup-content");
-        // this._nextButton = this._el.querySelector('.right-button');
-        // this._prevButton = this._el.querySelector('.left-button');
+        this.el = el;
+        this.el.addEventListener("mousewheel", event => event.stopImmediatePropagation());
+        this.el.addEventListener("keydown", event => event.stopPropagation());
+        this.content = content;
 
-        // const debouncedHandler = debounce(this.setSearchTopics, 350);
-        // this._searchInput.addEventListener('input', event => {
-        //   debouncedHandler.call(this, event.target.value);
-        // });
-
-        // this._nextButton.addEventListener('click', () => {
-        //   this.onNextButtonClick();
-        // });
-
-        // this._prevButton.addEventListener('click', () => {
-        //   this.onPrevButtonClick();
-        // });
-
-        this._popupContent.addEventListener("click", (e) => {
-            let row = e.target.closest(".ytp-topic-row");
+        this.content.addEventListener("click", e => {
+            let eventTarget = e.target;
+            let row = eventTarget.closest(".vken-topic-row");
             if (row) {
-                this.hide();
+                this.visible = false;
                 EE.emit("seek-video", parseInt(row.dataset["time"]));
             }
         });
 
         const resetDiv = document.createElement("div");
-        resetDiv.setAttribute("class", "ytp-reset-div");
-        resetDiv.addEventListener("click", (e) => this.hide());
-        container.append(resetDiv);
+        resetDiv.setAttribute("class", "vken-reset-div");
+        resetDiv.addEventListener("click", _ => (this.visible = false));
+        video.parentElement.append(resetDiv);
 
         EE.on("time-update", (currentTime) => {
-            if (this._topics) {
-                this.setPlayingTopic(currentTime);
+            if (this.topics?.size > 0) {
+                this.scrollPlayingTopicIntoView(currentTime);
             }
         });
     }
 
-    el() {
-        return this._el;
-    }
+    setupButton() {
+        const el = document.createElement("div");
+        el.setAttribute("class", "vjs-control vjs-button vken-topics-button");
+        const subtitlesButton = this.controlBar.querySelector(".vjs-playback-rate");
+        subtitlesButton.insertAdjacentElement("beforebegin", el);
 
-    show() {
-        if (!this._isOpen) {
-            this._el.classList.add("active");
-            this._container.classList.add("ytp-show-controlbar");
-            this._isOpen = true;
-            this.scrollPlayingTopicIntoView();
-            // this._searchInput.focus();
-        }
-    }
-
-    hide() {
-        if (this._isOpen) {
-            this._el.classList.remove("active");
-            this._container.classList.remove("ytp-show-controlbar");
-
-            this._isOpen = false;
-            this.resetTopics();
-        }
-    }
-
-    isOpen() {
-        return this._isOpen;
-    }
-
-    scrollPlayingTopicIntoView() {
-        if (this._playingRow) {
-            let container = this._playingRow.parentNode;
-            container.scrollTop = this._playingRow.offsetTop - container.clientHeight / 2 + 20;
-        }
-    }
-
-    // setSearchTopics(searchTerm) {
-    //   if(searchTerm.length > 0) {
-    //     let formattedTopics = [];
-    //     Object.keys(this._topics).forEach(time => {
-    //       let text = this._topics[time];
-    //       let index = text.toLowerCase().indexOf(searchTerm.toLowerCase());
-
-    //       if (index > -1) {
-    //         formattedTopics.push({
-    //           time,
-    //           text: [text.slice(0, index), text.slice(index, index + searchTerm.length), text.slice(index + searchTerm.length)]
-    //         });
-    //       }
-    //     });
-
-    //     this.setHTML(formattedTopics);
-    //     this._isSearching = true;
-    //     this._el.classList.add('searching');
-    //   }
-    //   else {
-    //     this.resetTopics();
-    //     this.setPlayingTopic(this._video.currentTime);
-    //     this.scrollPlayingTopicIntoView();
-    //   }
-    // }
-
-    resetTopics() {
-        const formattedTopics = Object.keys(this._topics).map((time) => {
-            return { time, text: [this._topics[time], "", ""] };
+        el.addEventListener("click", _ => {
+            this.visible = !this.visible;
         });
-        this.setHTML(formattedTopics);
-        this._isSearching = false;
-        this._el.classList.remove("searching");
     }
 
-    setHTML(topics) {
-        let innerHTML = "";
-        if (topics.length > 0) {
-            innerHTML = topics.reduce((html, topic) => {
-                const { time, text } = topic;
-                return (
-                    html +
-                    `
-            <div class="ytp-topic-row" data-time=${time}>
-              <div class="ytp-topic-dot">•</div>
-              <div class="ytp-topic-text">${text[0]}<mark>${text[1]}</mark>${text[2]}</div>
-              <div class="ytp-topic-time">${secondsToHours(time)}</div>
-            </div>`
-                );
-            }, "");
-        } else {
-            innerHTML = `
-          <div class="empty">Nothing found</div>
-        `;
+    findPlayingRow(currentTime) {
+        let rows = this.content.querySelectorAll("div.vken-topic-row");
+        if (rows.length === 0 || currentTime < parseInt(rows[0].getAttribute("data-time"))) {
+            return null;
         }
-        this._popupContent.innerHTML = innerHTML;
-    }
 
-    setTopics(topics) {
-        this.hide();
-        this._topics = topics;
-        this.resetTopics();
-        this._topicTimes = Object.keys(topics).map(Number);
-        this._topicTimes.push(999999);
-    }
+        let result = null;
+        for (let i = 0; i < rows.length; i++) {
+            let rowTime = rows[i].getAttribute("data-time");
+            let nextRowTime = rows[i + 1]?.getAttribute("data-time") ?? "999999";
 
-    setPlayingTopic(currentTime) {
-        if (this._isSearching) return;
-
-        let found = false;
-        for (let i = 0; i < this._topicTimes.length - 1; i++) {
-            if (currentTime >= this._topicTimes[i] && currentTime < this._topicTimes[i + 1]) {
-                this._playingTopic = this._topicTimes[i];
-                found = true;
+            if (currentTime >= parseInt(rowTime) && currentTime < parseInt(nextRowTime)) {
+                result = rows[i];
                 break;
             }
         }
-
-        if (!found) {
-            this._playingTopic = null;
-        }
-
-        this.highlightPlayingTopic();
+        return result;
     }
 
-    highlightPlayingTopic() {
-        if (this._playingTopic !== null) {
-            const playingRow = this._el.querySelector(`div.ytp-topic-row[data-time="${this._playingTopic}"]`);
+    scrollPlayingTopicIntoView(currentTime) {
+        let playingRow = this.findPlayingRow(currentTime);
+        LOG("Playing row", playingRow);
 
-            if (playingRow === this._playingRow) return;
+        if (playingRow && this.playingRow !== playingRow) {
+            this.playingRow?.classList.remove("highlighted");
 
-            if (this._playingRow) {
-                this._playingRow.classList.remove("highlighted");
-            }
+            let container = playingRow.parentElement;
+            container.scrollTop = playingRow.offsetTop - container.clientHeight / 2 + 20;
 
             playingRow.classList.add("highlighted");
-            this._playingRow = playingRow;
+            this.playingRow = playingRow;
         }
     }
 
-    // onNextButtonClick() {
-    //   const nextIndex = this._topicTimes.indexOf(this._playingTopic) + 1;
-    //   if(nextIndex > this._topicTimes.length - 2) {
-    //     return;
-    //   }
+    get visible() {
+        return this.el.hasAttribute("visible");
+    }
 
-    //   const nextTopicTime = this._topicTimes[nextIndex];
-    //   this._video.currentTime = nextTopicTime;
+    set visible(value) {
+        this.el.toggleAttribute("visible", value);
+        this.video.parentElement.classList.toggle("vken-topics-visible", value);
+    }
 
-    //   this.setPlayingTopic(nextTopicTime);
-    //   this.scrollPlayingTopicIntoView();
-    // }
+    setContent() {
+        this.content.innerHTML = "";
+        for (let [key, value] of this.topics.entries()) {
+            let row = this.createRow(key, value);
+            this.content.append(row);
+        }
+    }
 
-    // onPrevButtonClick() {
-    //   const prevIndex = this._topicTimes.indexOf(this._playingTopic) - 1;
-    //   if(prevIndex < 0) {
-    //     return;
-    //   }
+    createRow(time, text) {
+        const html = template`
+            <div ref="el" class="vken-topic-row" data-time=${time}>
+                <div class="vken-topic-dot">•</div>
+                <div class="vken-topic-text">${text}</div>
+                <div class="vken-topic-time">${secondsToHours(time)}</div>
+            </div>
+        `;
 
-    //   const prevTopicTime = this._topicTimes[prevIndex];
-    //   this._video.currentTime = prevTopicTime;
-    //   this.setPlayingTopic(prevTopicTime);
-    //   this.scrollPlayingTopicIntoView();
-    // }
+        let { el } = html.refs();
+        return el;
+    }
+
+    async fetchTopics(videoId) {
+        let topics = new Map();
+
+        const response = await fetch(`${API_BASE}/mmtocnew?youtube_id=${videoId}&generate=0`);
+        if (response.ok) {
+            const data = await response.json();
+            if (data?.mmtoc) {
+                Object.keys(data.mmtoc)
+                    .map(Number)
+                    .forEach(key => {
+                        topics.set(key, data.mmtoc[key]);
+                    });
+            }
+        }
+
+        if (topics.size > 0) {
+            this.topics = topics;
+            this.setContent();
+            this.setupButton();
+        }
+    }
 }

@@ -1,4 +1,4 @@
-import "./options";
+import "./Options";
 import EditorJS from "@editorjs/editorjs";
 import { LOG } from "../lib/util";
 import { html, render } from "lit-html";

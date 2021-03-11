@@ -1,40 +1,4 @@
-.vjs-control-bar {
-    .vken-topics-button {
-        cursor: pointer;
-        margin: 0 3px;
-        background-image: svg-load("../../icons/topics.svg");
-        width: 20px;
-        height: 20px;
-
-        &:hover {
-            transform: scale(1.2);
-        }
-
-        &::after {
-            content: "Show Topics";
-            position: absolute;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            width: 7.5em;
-            height: 2em;
-            background: rgba(10, 10, 10, 0.75);
-            transform: translate(-3em, -5em);
-            color: #fff;
-            pointer-events: none;
-            border-radius: 2px;
-            font-size: 0.7em;
-            font-weight: 500;
-            letter-spacing: -0.3px;
-        }
-
-        &:hover::after {
-            display: flex;
-        }
-    }
-}
-
-.ytp-reset-div {
+.vken-reset-div {
     display: none;
     position: absolute;
     top: 0;
@@ -44,22 +8,26 @@
     z-index: 70;
 }
 
-div.ytp-topics-popup.active ~ .ytp-reset-div {
+div.vken-topics-popup[visible] ~ .vken-reset-div {
     display: block;
 }
 
-.ytp-popup.ytp-topics-popup {
+.vken-topics-visible .vjs-control-bar {
+    opacity: 1 !important;
+}
+
+.vken-popup.vken-topics-popup {
     display: none;
     position: absolute;
     flex-direction: column;
     font-size: 13px;
-    right: 25px;
+    right: 22px;
     bottom: 70px;
     z-index: 71;
     max-height: calc(97% - 75px);
     width: calc(130px + 26%);
     max-width: 410px;
-    background: rgba(28, 28, 28, 0.92);
+    background: rgba(28, 28, 28, 0.95);
 
     &::before {
         content: "";
@@ -83,7 +51,7 @@ div.ytp-topics-popup.active ~ .ytp-reset-div {
         z-index: 2;
     }
 
-    &.active {
+    &[visible] {
         display: flex;
     }
 
@@ -111,13 +79,13 @@ div.ytp-topics-popup.active ~ .ytp-reset-div {
             color: #dddddd;
         }
 
-        .ytp-topic-row {
+        .vken-topic-row {
             display: flex;
             flex-direction: row;
             cursor: pointer;
             padding: 0.6em 0.7em;
             line-height: 1.4;
-            color: #ececec;
+            color: #f6f6f6;
 
             &:first-child {
                 padding-top: 1.3em;
@@ -132,14 +100,14 @@ div.ytp-topics-popup.active ~ .ytp-reset-div {
             }
 
             &.highlighted {
-                color: #95c1ff;
+                color: #8bc5ff;
             }
 
-            .ytp-topic-dot {
+            .vken-topic-dot {
                 flex: 2;
             }
 
-            .ytp-topic-text {
+            .vken-topic-text {
                 flex: 30;
                 padding-right: 5px;
                 display: -webkit-box;
@@ -148,7 +116,7 @@ div.ytp-topics-popup.active ~ .ytp-reset-div {
                 overflow: hidden;
             }
 
-            .ytp-topic-time {
+            .vken-topic-time {
                 flex: 6;
                 text-align: right;
                 font-size: 80%;
@@ -156,11 +124,5 @@ div.ytp-topics-popup.active ~ .ytp-reset-div {
                 padding-left: 5px;
             }
         }
-    }
-
-    .ytp-topic-text mark {
-        /* color: #b6ffb6; */
-        background: none;
-        color: #ffff72;
     }
 }
