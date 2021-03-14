@@ -26,8 +26,8 @@ body {
     left: calc(50% - 16em);
     width: 32em;
     height: 3em;
-    border: 2px solid #3b8acf;
-    color: #3b8acf;
+    border: 2px solid #3587cf;
+    color: #327bbb;
     font-size: 16px;
 }
 
@@ -40,7 +40,7 @@ body {
     left: calc(50% - 4em);
     width: 8em;
     height: 2.6em;
-    background: #3b8acf;
+    background: #3587cf;
     color: white;
     font-size: 15px;
     cursor: pointer;
@@ -64,7 +64,7 @@ body {
     position: relative;
     width: 100%;
     display: block;
-    background: #4c9be0;
+    background: #3587cf;
     padding: 15px;
     color: #fff;
     font-size: 20px;
@@ -128,10 +128,10 @@ input:not(:placeholder-shown):not(:focus):invalid {
     justify-content: center;
     align-items: center;
     margin: 0 auto -15px auto;
-    background: #4c9be0;
+    background: #3587cf;
     border-radius: 100%;
-    border: 1px solid #4c9be0;
-    color: #4c9be0;
+    border: 1px solid #3587cf;
+    color: #3587cf;
     font-size: 24px;
     cursor: pointer;
     box-shadow: 0px 0px 0px 7px #fff;

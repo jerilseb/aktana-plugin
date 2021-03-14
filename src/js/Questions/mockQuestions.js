@@ -1,60 +1,110 @@
-import { sleep } from "../lib/util";
+import { LOG, sleep } from "../lib/util";
+import { DASHBOARD_API_BASE } from "../lib/API";
 
-const data = [
-    {
-        id: 463434,
-        text: {
-            time: 1550476186479,
-            blocks: [
-                {
-                    type: "paragraph",
-                    data: {
-                        text: "Which is the main part of Aktana Decision Support Suite",
-                    },
-                },
-            ],
-            version: "2.8.1",
-        },
-        options: ["Market Data & Insights", "MCM and Field Activity", "Non Personal Channel Actions", "None of the above"],
-        type: "single",
-        correct: [1],
-        time: [650, 655],
-    },
-    {
-        id: 832955,
-        text: {
-            time: 1550476186479,
-            blocks: [
-                {
-                    type: "paragraph",
-                    data: {
-                        text: "If you don’t specify ASC or DESC after a SQL ORDER BY clause, which is used by default?",
-                    },
-                },
-            ],
-            version: "2.8.1",
-        },
-        options: [
-            "The values of count are logged or stored in a particular location or storage",
-            "The value of count from 0 to 9 is displayed in the console",
-            "An error is displayed",
-            "An exception is thrown",
-        ],
-        type: "single",
-        correct: [1],
-        time: [2360, 2365],
-    },
-];
+export async function fetchQuestions(videoId) {
+    const questions = [];
+    let body = JSON.parse(localStorage.getItem(videoId)) || [];
 
-export async function fetchQuestions () {
-    const _data = JSON.parse(JSON.stringify(data));
-    await sleep(1000);
-    return _data;
+    if (body.length > 0) {
+        for (let item of body) {
+            let q = transformData(item);
+            questions.push(q);
+        }
+    }
+
+    return questions;
 }
 
-export async function saveQuestions (data) {
+export async function postQuestion ({ text, time, options, correct }, videoId) {
+    let questions = JSON.parse(localStorage.getItem(videoId)) || [];
+    id = getRandomInt(10000);
+
+    const data = {
+        question: {
+            id,
+            question_json: { "blocks": [
+                        {
+                            type: "paragraph",
+                            data: { text }
+                        }
+                    ]},
+            options: { options },
+            answer: { answer: correct },
+            type: "MCQ-Single-Correct",
+            difficulty: "Moderate"
+        },
+        appears_at: time
+    };
+
+    questions.push(data);
+    localStorage.setItem(videoId, JSON.stringify(questions));
     await sleep(1000);
-    return data;
+
+    return transformData(data);
+}
+
+export async function updateQuestion ({ text, time, options, correct }, qId, videoId) {
+    let questions = JSON.parse(localStorage.getItem(videoId)) || [];
+
+    let question = questions.find(q => q.question.id === qId);
+    let index = questions.indexOf(question);
+    if (index > -1) {
+        questions.splice(index, 1);
+    }
+
+    const data = {
+        question: {
+            id: qId,
+            question_json: { "blocks": [
+                        {
+                            type: "paragraph",
+                            data: { text }
+                        }
+                    ]},
+            options: { options },
+            answer: { answer: correct },
+            type: "MCQ-Single-Correct",
+            difficulty: "Moderate"
+        },
+        appears_at: time
+    };
+
+    questions.push(data);
+
+    localStorage.setItem(videoId, JSON.stringify(questions));
+    await sleep(1000);
+
+    return transformData(data);
+}
+
+export async function deleteQuestion (qId, videoId) {
+    let questions = JSON.parse(localStorage.getItem(videoId)) || [];
+
+    let question = questions.find(q => q.question.id === qId);
+    let index = questions.indexOf(question);
+    if (index > -1) {
+        questions.splice(index, 1);
+    }
+
+    localStorage.setItem(videoId, JSON.stringify(questions));
+    await sleep(1000);
+
+    return true
+}
+
+function transformData(data) {
+    let q = {};
+    let { question, appears_at } = data;
+    q["id"] = question["id"],
+    q["text"] = question["question_json"]["blocks"][0].data['text'];
+    q["options"] = question["options"]["options"];
+    q["time"] = appears_at,
+    q["correct"] = question["answer"]["answer"];
+    q["type"] = question["type"] === "MCQ-Single-Correct" ? "single" : "multi";
+    q["shown"] = false;
+    q["attempted"] = false;
+
+    return q;
 }
 
 function getRandomInt(max) {

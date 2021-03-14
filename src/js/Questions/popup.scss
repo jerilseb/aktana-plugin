@@ -3,7 +3,7 @@
         position: absolute;
         width: calc(100% - 180px);
         margin: auto;
-        max-width: 800px;
+        max-width: 750px;
         background: white;
         border-radius: 2px;
         padding: 2em 2.2em 2em 2.2em;
@@ -25,6 +25,7 @@
             top: -0.7em;
             color: #ffffff;
             border-radius: 2px;
+            z-index: 11;
         }
 
         .status {
@@ -34,7 +35,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(255, 255,255, 0.8);
+            background: rgba(255, 255,255, 0.9);
             display: none;
             justify-content: center;
             flex-direction: column;
@@ -107,7 +108,7 @@
         .submit-button,
         .save-button {
             width: 6em;
-            height: 2.2em;
+            height: 32px;
             background: #227fd6;
             display: none;
             position: absolute;
@@ -120,20 +121,48 @@
             border-radius: 3px;
         }
 
-        &:not([editable])[status="can-submit"] .submit-button {
+        &:not([editable])[selection-active] .submit-button {
             cursor: pointer;
             display: flex;
         }
 
-        &[editable][status="can-submit"] .save-button {
+        &[editable][selection-active] .save-button {
             cursor: pointer;
             display: flex;
+        }
+
+        .delete-button {
+            width: 2.2em;
+            height: 32px;
+            display: flex;
+            position: absolute;
+            bottom: 1.5em;
+            right: 8em;
+            background-color: #d15858;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .delete-button::before {
+            content: "";
+            background-image: svg-load("../../icons/delete-light.svg");
+            background-repeat: no-repeat;
+            background-size: contain;
+            width: 20px;
+            height: 20px;
+        }
+
+        &:not([editable]) .delete-button, &[new] .delete-button {
+            display: none;
         }
 
         .resume-button {
             display: none;
             width: 7em;
-            height: 2.2em;
+            height: 32px;
             background: #227fd6;
             position: absolute;
             bottom: 1.5em;
@@ -186,6 +215,24 @@
             * {
                 box-sizing: content-box;
             }
+        }
+
+        .delete-confirm {
+            position: absolute;
+            z-index: 10;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255,255, 0.9);
+            display: none;
+            justify-content: center;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        &[status="confirm-delete"] .delete-confirm {
+            display: flex;
         }
     }
 }

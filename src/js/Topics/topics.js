@@ -76,7 +76,6 @@ export default class Popup {
 
     scrollPlayingTopicIntoView(currentTime) {
         let playingRow = this.findPlayingRow(currentTime);
-        LOG("Playing row", playingRow);
 
         if (playingRow && this.playingRow !== playingRow) {
             this.playingRow?.classList.remove("highlighted");

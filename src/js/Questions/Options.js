@@ -90,7 +90,9 @@ customElements.define(
 
         set selected(values) {
             for( let idx of values) {
-                this.qOptions[idx].selected = true;
+                if(idx < this.qOptions.length) {
+                    this.qOptions[idx].selected = true;
+                }
             }
             this._selectedIdx = values;
         }
@@ -139,7 +141,7 @@ customElements.define(
             }
         }
 
-        revealAnswers(correctOptions) {
+        revealAnswers(correctOptions, selectedOptions) {
             let correct = true;
 
             for (let i = 0; i < this.qOptions.length; i++) {
@@ -147,7 +149,7 @@ customElements.define(
                 qOption.selected = false;
                 if (correctOptions.includes(i)) {
                     qOption.status = "correct";
-                } else if (this._selectedIdx.includes(i)) {
+                } else if (selectedOptions.includes(i)) {
                     qOption.status = "wrong";
                     correct = false;
                 } else {

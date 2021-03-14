@@ -1,3 +1,7 @@
+// const API_BASE = "https://apiv3.videoken.com/api/v3";
+// const API_BASE = "https://vkanalytics.videoken.com";
+const API_BASE = "https://stage-dashboard.videoken.com:8080";
+
 function restore_options() {
     // Use default value color = 'red' and likesColor = true.
     chrome.storage.local.get(["auth_token"], ({ auth_token }) => {
@@ -16,7 +20,7 @@ function restore_options() {
 
         if (email && password) {
             document.querySelector(".submit").classList.add("loading");
-            let response = await fetch("https://apiv3.videoken.com/api/v2/auth_user", {
+            let response = await fetch(`${API_BASE}/api/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json;charset=utf-8",
@@ -30,7 +34,7 @@ function restore_options() {
                 document.querySelector(".logged-in").classList.remove("hidden");
 
                 let data = await response.json();
-                let { auth_token } = data;
+                let auth_token = data.dashboardtoken;
 
                 document.querySelector(".input.email").classList.add("success");
                 document.querySelector(".input.password").classList.add("success");

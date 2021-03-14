@@ -16,8 +16,16 @@ customElements.define(
 
                 <div class="submit-button" @click=${() => this.submit()}>SUBMIT</div>
                 <div class="save-button" @click=${() => this.saveQuestion()}>SAVE</div>
+                <div class="delete-button" @click=${() => this.confirmDeletion()}></div>
                 <div class="resume-button" @click=${() => this.closePopup()}></div>
                 <div class="close-button" @click=${() => this.closePopup()}></div>
+                <div class="delete-confirm">
+                    <div>Are you sure you want to delete this question?</div>
+                    <div class="row">
+                        <div class="yes btn" @click=${() => this.deleteQuestion()}>Yes</div>
+                        <div class="no btn" @click=${() => this.status=""}>No</div>
+                    </div>
+                </div>
             `;
         }
 
@@ -29,11 +37,7 @@ customElements.define(
             this._questionText = this.querySelector("#q-text");
 
             this.addEventListener("option-change", (event) => {
-                if (this._optionsEl.selected.length > 0) {
-                    this.status = "can-submit";
-                } else {
-                    this.status = "cannot-submit";
-                }
+                this.selectionActive = this._optionsEl.selected.length > 0;
             });
         }
 
@@ -65,46 +69,81 @@ customElements.define(
             );
         }
 
+        confirmDeletion() {
+            this.status="confirm-delete";
+        }
+
+        // reset() {
+        //     this.status = "";
+        // }
+
+        deleteQuestion() {
+            if (!this.editable) return;
+
+            this.dispatchEvent(
+                new CustomEvent("delete", {
+                    bubbles: false,
+                    composed: true,
+                })
+            );
+        }
+
         submit() {
-            if (this.status === "can-submit") {
+            if (this.selectionActive) {
                 this.status = "submitted";
-                this._optionsEl.revealAnswers(this._correctOptions);
+                this._optionsEl.revealAnswers(this._correctOptions, this._optionsEl.selected);
+
+                this.dispatchEvent(
+                    new CustomEvent("submit", {
+                        bubbles: false,
+                        composed: true,
+                    })
+                );
             }
         }
 
         set question(question) {
             // debugger
-            const { id, text, options, type, correct } = question;
+            const { id, text, options, type, correct, time, attempted, selected } = question;
 
             this._optionsEl.type = type;
             this._optionsEl.options = options;
             this._correctOptions = correct;
             this.qID = id;
+            this.qTime = time;
             this.status = "";
 
-            if(this.editable) {
+            if(this.editable && correct) {
                 this._optionsEl.selected = correct;
+                this.selectionActive = true;
+            } else {
+                this.selectionActive = false;
             }
 
-            let paragraph = text.blocks && text.blocks[0].data['text'];
-            this._questionText.innerHTML = paragraph;
+            this._questionText.innerHTML = text;
 
-            try {
-                // this._editor = new EditorJS({
-                //     holder: "q-text",
-                //     data: text,
-                //     readOnly: !this.editable,
-                // });
-
-
-            } catch (err) {
-                console.error("AKTANA:", err);
+            if(attempted) {
+                this.status = "submitted";
+                this._optionsEl.revealAnswers(this._correctOptions, selected);
             }
+
+            // try {
+            //     this._editor = new EditorJS({
+            //         holder: "q-text",
+            //         data: text,
+            //         readOnly: !this.editable,
+            //     });
+
+
+            // } catch (err) {
+            //     console.error("AKTANA:", err);
+            // }
         }
 
         editedQuestion() {
             return {
                 id: this.qID,
+                time: this.qTime,
                 text: this._questionText.innerHTML,
                 options: this._optionsEl.options,
                 correct: this._optionsEl.selected,
@@ -117,6 +156,15 @@ customElements.define(
 
         set qID(value) {
             this.setAttribute("qid", value);
+            this.toggleAttribute("new", value === -1)
+        }
+
+        get qTime() {
+            return parseInt(this.getAttribute("qtime"));
+        }
+
+        set qTime(value) {
+            this.setAttribute("qtime", value);
         }
 
         get status() {
@@ -133,6 +181,14 @@ customElements.define(
 
         set editable(value) {
             return this.toggleAttribute("editable", !!value);
+        }
+
+        get selectionActive() {
+            return this.hasAttribute("selection-active");
+        }
+
+        set selectionActive(value) {
+            return this.toggleAttribute("selection-active", !!value);
         }
 
         get visible() {
