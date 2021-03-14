@@ -4,7 +4,7 @@ import { sleep, debounce, getQueryParam, LOG } from "./lib/util";
 import { waitForElementInsertion, waitForElement } from "./lib/domUtil";
 import Question from "./Questions/question";
 // import Topics from "./Topics/topics";
-import Popup from "./Topics/popup2";
+import Topics from "./Topics/topics";
 
 window.addEventListener("load", async () => {
     LOG("Document load fired");
@@ -57,9 +57,8 @@ async function initialize() {
         const videoId = "aktana-" + video.duration.toFixed(3).replace(".", "").padStart(8, "0");
         const container = video.parentElement;
         const controlBar = await waitForElement(container, ".vjs-control-bar");
-        const questions = new Question(EE);
-        // const topics = new Topics(EE);
-        const popup = new Popup(EE, video, controlBar);
+        const questions = new Question(EE, video, controlBar);
+        const topics = new Topics(EE, video, controlBar);
 
         // Fire a time update event every second
         let prevTime = 0;
@@ -75,8 +74,7 @@ async function initialize() {
             }
         }, 1000);
 
-        questions.setupControls(container, controlBar, video);
-        await questions.getQuestionsForVideo(videoId);
+        questions.initialize(videoId);
 
         chrome.storage.local.get(["auth_token"], ({ auth_token }) => {
             if (auth_token) {
@@ -87,6 +85,6 @@ async function initialize() {
 
         // topics.setupControls(container, controlBar);
         // await topics.getTopcis(videoId);
-        popup.fetchTopics(videoId);
+        topics.initialize(videoId);
     }
 }

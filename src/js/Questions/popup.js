@@ -9,8 +9,9 @@ customElements.define(
     class extends HTMLElement {
         get template() {
             return html`
-                <div class="title">Question</div>
-                <div id="q-text"></div>
+                <div class="status"></div>
+                <div class="title">${this.editable ? "Edit Question" : "Question"}</div>
+                <div id="q-text" ?contenteditable=${this.editable}></div>
                 <q-options ?editable=${this.editable}></q-options>
 
                 <div class="submit-button" @click=${() => this.submit()}>SUBMIT</div>
@@ -31,7 +32,7 @@ customElements.define(
                 if (this._optionsEl.selected.length > 0) {
                     this.status = "can-submit";
                 } else {
-                    this.status = "";
+                    this.status = "cannot-submit";
                 }
             });
         }
@@ -72,6 +73,7 @@ customElements.define(
         }
 
         set question(question) {
+            // debugger
             const { id, text, options, type, correct } = question;
 
             this._optionsEl.type = type;
@@ -80,21 +82,30 @@ customElements.define(
             this.qID = id;
             this.status = "";
 
+            if(this.editable) {
+                this._optionsEl.selected = correct;
+            }
+
+            let paragraph = text.blocks && text.blocks[0].data['text'];
+            this._questionText.innerHTML = paragraph;
+
             try {
-                this._editor = new EditorJS({
-                    holder: "q-text",
-                    data: text,
-                    readOnly: !this.editable,
-                });
+                // this._editor = new EditorJS({
+                //     holder: "q-text",
+                //     data: text,
+                //     readOnly: !this.editable,
+                // });
+
+
             } catch (err) {
                 console.error("AKTANA:", err);
             }
         }
 
-        async editedQuestion() {
+        editedQuestion() {
             return {
                 id: this.qID,
-                text: await this._editor.save(),
+                text: this._questionText.innerHTML,
                 options: this._optionsEl.options,
                 correct: this._optionsEl.selected,
             };

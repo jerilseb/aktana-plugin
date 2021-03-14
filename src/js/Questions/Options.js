@@ -88,6 +88,13 @@ customElements.define(
             return this._selectedIdx;
         }
 
+        set selected(values) {
+            for( let idx of values) {
+                this.qOptions[idx].selected = true;
+            }
+            this._selectedIdx = values;
+        }
+
         get options() {
             // return this._options;
             return this.qOptions.map((option) => option.text);

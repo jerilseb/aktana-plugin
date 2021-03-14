@@ -17,21 +17,21 @@ body {
     font-weight: 200;
 }
 
-#logged-in .message {
+.logged-in .message {
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
     top: calc(50% - 4em);
-    left: calc(50% - 10em);
-    width: 20em;
+    left: calc(50% - 16em);
+    width: 32em;
     height: 3em;
-    border: 2px solid rgb(17, 151, 17);
-    color: rgb(17, 151, 17);
-    font-size: 15px;
+    border: 2px solid #3b8acf;
+    color: #3b8acf;
+    font-size: 16px;
 }
 
-#logged-in .logout-button {
+.logged-in .logout-button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -40,7 +40,7 @@ body {
     left: calc(50% - 4em);
     width: 8em;
     height: 2.6em;
-    background: rgb(17, 151, 17);
+    background: #3b8acf;
     color: white;
     font-size: 15px;
     cursor: pointer;
@@ -82,6 +82,8 @@ body {
     right: 0;
     position: absolute;
 }
+
+
 .input {
     position: relative;
     width: 90%;
@@ -99,22 +101,34 @@ body {
     width: 100%;
     padding: 10px 5px 10px 40px;
     display: block;
-    border: 1px solid #ededed;
+    border: 1px solid #dddddd;
     border-radius: 4px;
-    transition: 0.2s ease-out;
-    color: #a1a1a1;
+    color: #868686;
 }
 .input input:focus {
-    padding: 10px 5px 10px 10px;
     outline: 0;
     border-color: #4c9be0;
 }
+.input.success input {
+    border-color: #2ecc71;
+    pointer-events: none;
+}
+.input.failed input {
+    border-color: #dd3e29;
+}
+
+input:not(:placeholder-shown):not(:focus):invalid {
+    border-color: #dd3e29;
+}
+
 .submit {
     width: 45px;
     height: 45px;
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 0 auto -15px auto;
-    background: #fff;
+    background: #4c9be0;
     border-radius: 100%;
     border: 1px solid #4c9be0;
     color: #4c9be0;
@@ -122,36 +136,47 @@ body {
     cursor: pointer;
     box-shadow: 0px 0px 0px 7px #fff;
     transition: 0.2s ease-out;
-}
-.submit:hover,
-.submit:focus {
-    background: #4c9be0;
-    color: #fff;
     outline: 0;
+    position: relative;
 }
-.feedback {
-    position: absolute;
-    bottom: -125px;
-    width: 100%;
-    text-align: center;
-    color: #fff;
-    background: #2ecc71;
-    padding: 12px 6px;
-    font-size: 14px;
-    display: none;
-    opacity: 0;
-}
-.feedback:before {
-    bottom: 100%;
-    left: 50%;
-    border: solid transparent;
-    content: "";
-    height: 0;
-    width: 0;
-    position: absolute;
+
+.submit.loading {
     pointer-events: none;
-    border-color: rgba(46, 204, 113, 0);
-    border-bottom-color: #2ecc71;
-    border-width: 10px;
-    margin-left: -10px;
+}
+
+.submit.failed {
+    background: #df4848;
+    border: 1px solid #df4848;
+    color: #df4848;
+}
+
+.submit.loading::before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    border-bottom-color: transparent;
+    animation-name: rotate;
+    animation-duration: 1.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.submit i {
+    color: #fff;
+}
+
+.submit.loading i {
+    display: none;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }

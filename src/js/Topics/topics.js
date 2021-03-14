@@ -1,7 +1,7 @@
 import { LOG, secondsToHours } from "../lib/util";
 import { template } from "../lib/domUtil";
 import { API_BASE } from "../lib/API";
-import "./popup.scss";
+import "./topics.scss";
 
 export default class Popup {
 
@@ -119,7 +119,7 @@ export default class Popup {
         return el;
     }
 
-    async fetchTopics(videoId) {
+    async initialize(videoId) {
         let topics = new Map();
 
         const response = await fetch(`${API_BASE}/mmtocnew?youtube_id=${videoId}&generate=0`);

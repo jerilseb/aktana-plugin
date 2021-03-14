@@ -1,8 +1,8 @@
 import "@webcomponents/custom-elements";
-import fetchQuestions from "./mockQuestions";
+import { fetchQuestions, saveQuestions } from "./mockQuestions";
 // import fetchQuestions from "./fetchQuestion";
 import questionPlaceholder from "./questionPlaceholder";
-import { secondsToHours } from "../lib/util";
+import { secondsToHours, sleep } from "../lib/util";
 import { LOG } from "../lib/util";
 import { template } from "../lib/domUtil";
 import { html, render } from "lit-html";
@@ -10,7 +10,10 @@ import "./popup";
 import "./question.scss";
 
 export default class Question {
-    constructor(EE) {
+    constructor(EE, video, controlBar) {
+        this._video = video;
+        this._container = video.parentElement;
+        this._controlBar = controlBar;
         this._questions = [];
         this._currentQuestion = null;
         this._EE = EE;
@@ -47,17 +50,6 @@ export default class Question {
                 ></q-popup>
             </div>
         `;
-    }
-
-    setupControls(container, controlBar, video) {
-        this._video = video;
-        this._container = container;
-        this._controlBar = controlBar;
-        this._timeline = this._container.querySelector(".vjs-progress-control");
-
-        this.render();
-        this._el = container.querySelector(".questions-container");
-        this._popupEl = this._el.querySelector("q-popup");
     }
 
     render() {
@@ -125,8 +117,14 @@ export default class Question {
     }
 
     async saveQuestion() {
+        let { id, text, options, correct } = this._popupEl.editedQuestion();
+        this._popupEl.status = "saving";
+
+        await saveQuestions({ text, options, correct });
+        this._popupEl.status = "save-success";
+        await sleep(1000);
+
         this.visible = false;
-        let { id, text, options, correct } = await this._popupEl.editedQuestion();
 
         if (id === -1) {
             let time = parseInt(this._video.currentTime);
@@ -137,9 +135,10 @@ export default class Question {
                 type: "single",
                 time: [time, time + 5],
             };
-    
+
             this.insertMarker(question, true);
         }
+        LOG(text);
     }
 
     insertMarker(duration, question, animate = false) {
@@ -147,11 +146,11 @@ export default class Question {
         const percentage = ((start / duration) * 100).toFixed(2);
 
         if (percentage > 99) return;
-        
+
         let el = template`
         <div
             ref="marker"
-            class="vken-question-pin ${animate && "animated"}" 
+            class="vken-question-pin ${animate && "animated"}"
             data-qid=${question["id"]}
             data-tip="Question at ${secondsToHours(start)}"
             style="left: calc(${percentage}% - 8px)"
@@ -159,7 +158,7 @@ export default class Question {
             <div class="question-icon"></div>
         </div>
         `;
-        
+
         const { marker } = el.refs();
         this._timeline.append(el);
 
@@ -174,14 +173,20 @@ export default class Question {
             LOG("Timeline not ready, skipping markers");
             return;
         }
-        const duration = await waitForDuration(this._video);
+        const duration = parseInt(this._video.duration);
 
         for (let question of this._questions) {
             this.insertMarker(duration, question, false);
         }
     }
 
-    async getQuestionsForVideo(videoId) {
+    async initialize(videoId) {
+        this._timeline = this._container.querySelector(".vjs-progress-control");
+
+        this.render();
+        this._el = this._container.querySelector(".questions-container");
+        this._popupEl = this._el.querySelector("q-popup");
+
         this.visible = false;
         this._questions = await fetchQuestions(videoId);
         LOG("Questions fetched", this._questions);
@@ -191,17 +196,5 @@ export default class Question {
             this.setupTimelineMarkers();
         }
     }
-}
-
-function waitForDuration(video) {
-    return new Promise(resolve => {
-        let timer = setInterval(() => {
-            let { duration } = video;
-            if(duration) {
-                clearInterval(timer);
-                resolve(parseInt(duration));
-            }
-        }, 200);
-    })
 }
 

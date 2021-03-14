@@ -20,7 +20,7 @@
             padding: 5px;
             justify-content: center;
             align-items: center;
-            
+
             &.visible {
                 display: flex;
             }
@@ -150,7 +150,7 @@
         &[editable] .checkbox:hover {
             border: none;
             background-image: svg-load("../../icons/tick.svg", fill=#adadad);
-            
+
             // &::before {
             //     display: block;
             //     text-align: center;
@@ -174,11 +174,11 @@
         }
 
         &[status="active"] .option-text:hover {
-            cursor: pointer;
+            // cursor: pointer;
         }
 
         &[editable] .option-text:hover {
-            cursor: pointer;
+            // cursor: pointer;
             background-color: #eaeaea;
             // border-bottom: 1px solid #cccccc;
         }

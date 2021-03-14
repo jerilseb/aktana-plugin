@@ -46,10 +46,15 @@ const data = [
     },
 ];
 
-export default async function () {
+export async function fetchQuestions () {
     const _data = JSON.parse(JSON.stringify(data));
     await sleep(1000);
     return _data;
+}
+
+export async function saveQuestions (data) {
+    await sleep(1000);
+    return data;
 }
 
 function getRandomInt(max) {

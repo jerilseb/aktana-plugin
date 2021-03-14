@@ -16,6 +16,42 @@ div.vken-topics-popup[visible] ~ .vken-reset-div {
     opacity: 1 !important;
 }
 
+.vjs-control-bar {
+    .vken-topics-button {
+        cursor: pointer;
+        margin: 0 3px;
+        background-image: svg-load("../../icons/topics.svg");
+        width: 20px;
+        height: 20px;
+
+        &:hover {
+            transform: scale(1.2);
+        }
+
+        &::after {
+            content: "Show Topics";
+            position: absolute;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            width: 7.5em;
+            height: 2em;
+            background: rgba(10, 10, 10, 0.75);
+            transform: translate(-3em, -5em);
+            color: #fff;
+            pointer-events: none;
+            border-radius: 2px;
+            font-size: 0.7em;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+        }
+
+        &:hover::after {
+            display: flex;
+        }
+    }
+}
+
 .vken-popup.vken-topics-popup {
     display: none;
     position: absolute;
