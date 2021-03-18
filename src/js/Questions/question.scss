@@ -92,7 +92,7 @@
             color: #fff;
             pointer-events: none;
             border-radius: 2px;
-            font-size: 0.8em;
+            font-size: 0.9em;
             letter-spacing: -0.3px;
         }
 
@@ -101,11 +101,12 @@
         }
     }
 
-    .vjs-control.vken-add-question-icon {
+    .vjs-control.vken-add-question-button {
         cursor: pointer;
         background-image: svg-load("../../icons/plus.svg");
         width: 20px;
         height: 20px;
+        margin: 0 3px;
 
         &:hover {
             transform: scale(1.2);
@@ -113,6 +114,40 @@
 
         &::after {
             content: "Add Question";
+            position: absolute;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            width: 7.5em;
+            height: 2em;
+            background: rgba(10, 10, 10, 0.75);
+            transform: translate(-3em, -5em);
+            color: #fff;
+            pointer-events: none;
+            border-radius: 2px;
+            font-size: 0.7em;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+        }
+
+        &:hover::after {
+            display: flex;
+        }
+    }
+
+    .vjs-control.vken-analytics-button {
+        cursor: pointer;
+        background-image: svg-load("../../icons/piechart.svg");
+        width: 20px;
+        height: 20px;
+        margin: 0 3px;
+
+        &:hover {
+            transform: scale(1.2);
+        }
+
+        &::after {
+            content: "View Analytics";
             position: absolute;
             display: none;
             justify-content: center;

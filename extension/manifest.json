@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
-    "name": "Aktana LinkedIn Learning",
-    "description": "Enhance your learning experience on LinkedIn Learning with in-video questions and quizzes",
-    "version": "1.1.0",
+    "name": "VideoKen for LinkedIn Learning",
+    "description": "Enhance the learning experience on LinkedIn Learning using VideoKen",
+    "version": "1.2.0",
     "minimum_chrome_version": "66.0",
     "icons": {
         "16": "icons/16.png",
@@ -12,20 +12,12 @@
     },
     "permissions": ["storage"],
     "background": { "scripts": ["background-scripts/hot-reload.js"] },
-    "browser_action": {
-        "default_icon": {
-            "16": "icons/16.png",
-            "32": "icons/32.png",
-            "48": "icons/48.png"
-        },
-        "default_popup": "browser-action/index.html"
-    },
     "content_scripts": [
         {
-            "matches": ["https://www.linkedin.com/learning/*", "https://linkedin.com/learning/*"],
-            "js": ["content-scripts/inject.js"],
-            "css": ["content-scripts/inject.css"],
-            "run_at": "document_end"
+          "matches": ["https://www.linkedin.com/learning/*"],
+          "js": ["content-scripts/inject.js"],
+          "css": ["content-scripts/inject.css"],
+          "run_at": "document_end"
         }
     ],
     "options_page": "options-page/index.html"

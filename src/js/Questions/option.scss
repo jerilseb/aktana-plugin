@@ -1,6 +1,7 @@
 #vken-controls {
     q-options {
         position: relative;
+        counter-reset: option;
 
         &[editable] {
             margin-left: -1.8em;
@@ -9,7 +10,7 @@
         .option-edit-popup {
             position: absolute;
             display: none;
-            width: 4em;
+            width: 4.5em;
             height: 2em;
             // height: 40px;
             background: white;
@@ -28,7 +29,7 @@
             .popup-button {
                 width: 1.5em;
                 height: 1.5em;
-                margin: 0 5px;
+                margin: 0 6px;
                 cursor: pointer;
                 background-repeat: no-repeat;
                 background-size: contain;
@@ -50,7 +51,7 @@
                             justify-content: center;
                             align-items: center;
                             color: white;
-                            background-color: #333333;
+                            background-color: #444444;
                             border-radius: 3px;
                             transform: translate(-5ch, -2.5em);
                         }
@@ -90,10 +91,13 @@
         margin: 0.5em 0.2em 0.2em 0.2em;
         font-size: 15px;
         align-items: center;
+        counter-increment: option;
 
         * {
             box-sizing: border-box;
         }
+
+        // Checkbox
 
         .checkbox {
             box-sizing: border-box;
@@ -113,28 +117,26 @@
             border-radius: 50%;
         }
 
-        &[type="single"][selected] .checkbox {
-            border-width: 0.35em;
-        }
-
         &[status="active"] .checkbox {
             cursor: pointer;
+
+            &:hover {
+                border-color: #999999;
+                transform: scale(1.05);
+                border-width: 0.35em;
+            }
         }
 
-        &[status="active"] .checkbox:hover {
-            border-color: #666666;
-            transform: scale(1.05);
-        }
-
-        &[selected] .checkbox.checkbox,
-        &[selected] .checkbox.checkbox:hover {
+        &[type="single"][selected] .checkbox.checkbox,
+        &[type="single"][selected] .checkbox.checkbox:hover {
+            border-width: 0.35em;
             border-color: #227fd6;
         }
 
-        &[type="multi"][selected] .checkbox {
-            border: none;
-            background-image: svg-load("../../icons/tick.svg", fill=#227fd6);
-        }
+        // &[type="multi"][selected] .checkbox {
+        //     border: none;
+        //     background-image: svg-load("../../icons/tick.svg", fill=#227fd6);
+        // }
 
         &[status="correct"] div.checkbox,
         &[selected][editable] div.checkbox {
@@ -150,49 +152,47 @@
         &[editable] .checkbox:hover {
             border: none;
             background-image: svg-load("../../icons/tick.svg", fill=#adadad);
-
-            // &::before {
-            //     display: block;
-            //     text-align: center;
-            //     content: 'Mark as correct';
-            //     padding: 4px;
-            //     transform: translate(-17ch, -4px);
-            //     font-size: 10px;
-            //     width: 14ch;
-            //     background: #ffffff;
-            //     border: 1px solid #bbbbbb;
-            //     border-radius: 3px;
-            // }
         }
+
+        // Option Text
 
         .option-text {
             display: inline-block;
             margin-left: 0.7em;
             padding: 0 0.3em;
             border-radius: 3px;
-            min-width: 2ch;
         }
 
-        &[status="active"] .option-text:hover {
-            // cursor: pointer;
+        &[editable] .option-text {
+            &:hover {
+                background-color: #ececec;
+            }
+
+            &:focus {
+                cursor: text;
+                background-color: #ececec;
+            }
+
+            &:empty {
+                &:not(:focus)::before {
+                    content: "Option " counter(option);
+                    font-style: italic;
+                    cursor: text;
+                    pointer-events: none;
+                    color: #7a7a7a;
+                }
+
+                &:focus {
+                    min-width: 8ch;
+                }
+            }
+
+            &:not(:empty) {
+                min-width: 3ch;
+            }
         }
 
-        &[editable] .option-text:hover {
-            // cursor: pointer;
-            background-color: #eaeaea;
-            // border-bottom: 1px solid #cccccc;
-        }
-
-        &[editable] .option-text:focus {
-            cursor: text;
-            background-color: #eaeaea;
-            // border-bottom: 1px solid #cccccc;
-        }
-
-        &[editable] .option-text:empty:not(:focus) {
-            background: #eaeaea;
-            // border-bottom: rgb(255, 153, 153)id #cccccc;
-        }
+        // Edit button
 
         &[editable] .edit-button {
             margin-right: .8em;

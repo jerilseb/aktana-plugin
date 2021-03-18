@@ -1,24 +1,21 @@
 import "./option.scss";
 import { template } from "../lib/domUtil";
+import { LOG } from "../lib/util";
 
 customElements.define(
     "q-option",
     class extends HTMLElement {
         set text(value) {
             let el = template`
-                <div ref="editButton" class="edit-button">
-                </div>
+                <div ref="editButton" class="edit-button"></div>
                 <div ref="checkBox" class="checkbox"></div>
-                <div ref="optionText" class="option-text"></div>            
+                <div ref="optionText" class="option-text"></div>
             `;
 
             let { checkBox, editButton, optionText } = el.refs();
             this.appendChild(el);
 
-            this._text = optionText;
-            this._text.textContent = value;
-            
-            checkBox.addEventListener("click", (_) => {
+            checkBox.addEventListener("click", _ => {
                 if (this.status === "active") {
                     this.dispatchEvent(
                         new CustomEvent("option-change", {
@@ -31,8 +28,7 @@ customElements.define(
 
             editButton.addEventListener("click", event => {
                 event.stopPropagation();
-                
-                if(!this.editable) return;
+
                 this.dispatchEvent(
                     new CustomEvent("option-edit", {
                         bubbles: true,
@@ -40,6 +36,9 @@ customElements.define(
                     })
                 );
             });
+
+            this._text = optionText;
+            this._text.textContent = value;
         }
 
         get text() {
@@ -92,7 +91,7 @@ customElements.define(
         }
 
         get index() {
-            return this.getAttribute("index");
+            return parseInt(this.getAttribute("index"));
         }
 
         disable() {

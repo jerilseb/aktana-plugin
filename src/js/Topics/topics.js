@@ -1,4 +1,4 @@
-import { LOG, secondsToHours } from "../lib/util";
+import { LOG, secondsToHours, sleep } from "../lib/util";
 import { template } from "../lib/domUtil";
 import { API_BASE } from "../lib/API";
 import "./topics.scss";
@@ -6,8 +6,8 @@ import "./topics.scss";
 export default class Popup {
 
     constructor(EE, video, controlBar) {
-        this.video = video;
-        this.controlBar = controlBar;
+        this._video = video;
+        this._controlBar = controlBar;
 
         const html = template`
             <div ref="el" class="vken-popup vken-topics-popup">
@@ -18,9 +18,9 @@ export default class Popup {
         const { el, content } = html.refs();
         video.parentElement.append(el);
 
-        this.el = el;
-        this.el.addEventListener("mousewheel", event => event.stopImmediatePropagation());
-        this.el.addEventListener("keydown", event => event.stopPropagation());
+        this._el = el;
+        this._el.addEventListener("mousewheel", event => event.stopImmediatePropagation());
+        this._el.addEventListener("keydown", event => event.stopPropagation());
         this.content = content;
 
         this.content.addEventListener("click", e => {
@@ -44,16 +44,29 @@ export default class Popup {
         });
     }
 
-    setupButton() {
-        const el = document.createElement("div");
-        el.setAttribute("class", "vjs-control vjs-button vken-topics-button");
-        const subtitlesButton = this.controlBar.querySelector(".vjs-playback-rate");
-        subtitlesButton.insertAdjacentElement("beforebegin", el);
+    async setupButton() {
+        const html = template`
+            <div ref="button" class="vjs-control vjs-button vken-topics-button show-hint">
+                <div class="topics-hint">Topics available here</div>
+            </div>
+        `;
 
-        el.addEventListener("click", _ => {
+        const { button } = html.refs();
+
+        const subtitlesButton = this._controlBar.querySelector(".vjs-playback-rate");
+        subtitlesButton.insertAdjacentElement("beforebegin", button);
+
+        button.addEventListener("click", _ => {
             this.visible = !this.visible;
         });
+
+        // Hide the hint after 3 seconds
+        this._controlBar.parentElement.classList.add('vken-show-controlbar');
+        await sleep(3600);
+        this._controlBar.parentElement.classList.remove('vken-show-controlbar')
+        button.classList.remove("topics-show-hint");
     }
+
 
     findPlayingRow(currentTime) {
         let rows = this.content.querySelectorAll("div.vken-topic-row");
@@ -89,12 +102,12 @@ export default class Popup {
     }
 
     get visible() {
-        return this.el.hasAttribute("visible");
+        return this._el.hasAttribute("visible");
     }
 
     set visible(value) {
-        this.el.toggleAttribute("visible", value);
-        this.video.parentElement.classList.toggle("vken-topics-visible", value);
+        this._el.toggleAttribute("visible", value);
+        this._controlBar.parentElement.classList.toggle("vken-topics-open", value);
     }
 
     setContent() {

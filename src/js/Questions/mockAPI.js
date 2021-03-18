@@ -15,7 +15,7 @@ export async function fetchQuestions(videoId) {
     return questions;
 }
 
-export async function postQuestion ({ text, time, options, correct }, videoId) {
+export async function createQuestion ({ text, time, options, correct }, videoId) {
     let questions = JSON.parse(localStorage.getItem(videoId)) || [];
     id = getRandomInt(10000);
 
@@ -43,10 +43,10 @@ export async function postQuestion ({ text, time, options, correct }, videoId) {
     return transformData(data);
 }
 
-export async function updateQuestion ({ text, time, options, correct }, qId, videoId) {
+export async function updateQuestion ({ text, time, options, correct }, questionId, videoId) {
     let questions = JSON.parse(localStorage.getItem(videoId)) || [];
 
-    let question = questions.find(q => q.question.id === qId);
+    let question = questions.find(q => q.question.id === questionId);
     let index = questions.indexOf(question);
     if (index > -1) {
         questions.splice(index, 1);
@@ -54,7 +54,7 @@ export async function updateQuestion ({ text, time, options, correct }, qId, vid
 
     const data = {
         question: {
-            id: qId,
+            id: questionId,
             question_json: { "blocks": [
                         {
                             type: "paragraph",
@@ -77,10 +77,10 @@ export async function updateQuestion ({ text, time, options, correct }, qId, vid
     return transformData(data);
 }
 
-export async function deleteQuestion (qId, videoId) {
+export async function deleteQuestion (questionId, videoId) {
     let questions = JSON.parse(localStorage.getItem(videoId)) || [];
 
-    let question = questions.find(q => q.question.id === qId);
+    let question = questions.find(q => q.question.id === questionId);
     let index = questions.indexOf(question);
     if (index > -1) {
         questions.splice(index, 1);

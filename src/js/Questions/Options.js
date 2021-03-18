@@ -14,16 +14,16 @@ customElements.define(
         connectedCallback() {
             this.addEventListener("option-change", (event) => {
                 if (this.type === "single") {
-                    for (let option of this.qOptions) {
-                        option.selected = false;
+                    for (let element of this.optionElements) {
+                        element.selected = false;
                     }
                     event.target.selected = true;
-                    this._selectedIdx = [parseInt(event.target.index)];
+                    this._selectedIdx = [event.target.index];
                 } else {
                     event.target.selected = !event.target.selected;
                     this._selectedIdx = [];
-                    for (let option of this.querySelectorAll("q-option[selected]")) {
-                        this._selectedIdx.push(parseInt(option.index));
+                    for (let element of this.selectedOptionElements) {
+                        this._selectedIdx.push(element.index);
                     }
                 }
             });
@@ -40,40 +40,37 @@ customElements.define(
             this._editPopup = editPopup;
 
             this.addEventListener("option-edit", event => {
-                let show = !event.target.editing
                 this.resetEdit();
 
-                if(show) {
+                if(!event.target.editing) {
                     event.target.editing = true;
-                    this.showEditPopup(this.qOptions.indexOf(event.target) , event.target.offsetTop);
-                } else {
-                    this.hideEditPopup();
+                    this.showEditPopup(this.optionElements.indexOf(event.target) , event.target.offsetTop);
                 }
             });
 
-            this.addEventListener('click', event => {
+            this.addEventListener('click', _ => {
                 LOG("Clicked outside");
                 this.resetEdit();
-                this.hideEditPopup();
             });
 
-            addButton.addEventListener('click', event => {
+            addButton.addEventListener('click', _ => {
                 let index = parseInt(this._editPopup.getAttribute('index'));
-                let qOption = this.createOption('Option text');
-                let current = this.qOptions[index];
-                current.insertAdjacentElement('afterend', qOption);
+                let element = this.createOption('');
+                let current = this.optionElements[index];
+                current.insertAdjacentElement('afterend', element);
             });
 
-            deleteButton.addEventListener('click', event => {
+            deleteButton.addEventListener('click', _ => {
                 let index = parseInt(this._editPopup.getAttribute('index'));
-                this.removeChild(this.qOptions[index]);
+                this.removeChild(this.optionElements[index]);
             });
         }
 
         resetEdit() {
-            for( let qOption of this.qOptions) {
-                qOption.editing = false;
+            for( let option of this.optionElements) {
+                option.editing = false;
             }
+            this.hideEditPopup();
         }
 
         set type(value) {
@@ -90,20 +87,19 @@ customElements.define(
 
         set selected(values) {
             for( let idx of values) {
-                if(idx < this.qOptions.length) {
-                    this.qOptions[idx].selected = true;
+                if(idx < this.optionElements.length) {
+                    this.optionElements[idx].selected = true;
                 }
             }
             this._selectedIdx = values;
         }
 
-        get options() {
-            // return this._options;
-            return this.qOptions.map((option) => option.text);
+        get optionElements() {
+            return Array.from(this.querySelectorAll("q-option"));
         }
 
-        get qOptions() {
-            return Array.from(this.querySelectorAll("q-option"));
+        get selectedOptionElements() {
+            return Array.from(this.querySelectorAll("q-option[selected]"));
         }
 
         get editable() {
@@ -114,46 +110,51 @@ customElements.define(
             return this.toggleAttribute("editable", !!value);
         }
 
+        get options() {
+            return this.optionElements.map((option) => option.text);
+        }
+
         set options(values) {
             this.destroyOptions();
 
-            let options = values.map((optionText, idx) => {
-                const qOption = this.createOption(optionText);
-                qOption.index = idx;
-                return qOption;
-            }) ;
+            let optionElements = values.map((optionText, idx) => {
+                const element = this.createOption(optionText);
+                element.index = idx;
+                return element;
+            });
 
-            this.append(...options);
+            this.append(...optionElements);
         }
 
         createOption(optionText) {
-            const qOption = document.createElement("q-option");
-            qOption.status = "active";
-            qOption.type = this.type;
-            qOption.text = optionText;
-            qOption.editable = this.editable;
-            return qOption;
+            const element = document.createElement("q-option");
+            element.status = "active";
+            element.type = this.type;
+            element.text = optionText;
+            element.editable = this.editable;
+            return element;
         }
 
         destroyOptions() {
-            for( let qOption of this.qOptions) {
-                this.removeChild(qOption);
+            for( let element of this.optionElements) {
+                this.removeChild(element);
             }
         }
 
         revealAnswers(correctOptions, selectedOptions) {
             let correct = true;
 
-            for (let i = 0; i < this.qOptions.length; i++) {
-                let qOption = this.qOptions[i];
-                qOption.selected = false;
+            for (let i = 0; i < this.optionElements.length; i++) {
+                let element = this.optionElements[i];
+                element.selected = false;
+
                 if (correctOptions.includes(i)) {
-                    qOption.status = "correct";
+                    element.status = "correct";
                 } else if (selectedOptions.includes(i)) {
-                    qOption.status = "wrong";
+                    element.status = "wrong";
                     correct = false;
                 } else {
-                    qOption.disable();
+                    element.disable();
                 }
             }
 

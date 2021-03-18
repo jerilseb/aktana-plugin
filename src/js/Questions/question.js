@@ -1,11 +1,11 @@
 import "@webcomponents/custom-elements";
-import { fetchQuestions, postQuestion, updateQuestion, deleteQuestion } from "./mockQuestions";
-// import { fetchQuestions, postQuestion } from "./API";
+import { html, render } from "lit-html";
+// import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion } from "./mockAPI";
+import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion, submitQuestion } from "./API";
 import questionPlaceholder from "./questionPlaceholder";
 import { secondsToHours, sleep } from "../lib/util";
-import { LOG } from "../lib/util";
+import { LOG, getAuthToken } from "../lib/util";
 import { template } from "../lib/domUtil";
-import { html, render } from "lit-html";
 import "./popup";
 import "./question.scss";
 
@@ -16,9 +16,9 @@ export default class Question {
         this._container = video.parentElement;
         this._controlBar = controlBar;
         this._questions = [];
+        this._editable = false;
         this._currentQuestion = null;
         this._EE = EE;
-        this._editable = false;
 
         this._EE.on("time-update", (currentTime) => {
             if (this.editable || this.visible) return;
@@ -33,8 +33,8 @@ export default class Question {
             }
         });
 
-        this._EE.on("marker-click", (qId) => {
-            let question = this._questions.filter((q) => q["id"] === qId)[0];
+        this._EE.on("marker-click", questionId => {
+            let question = this._questions.filter((q) => q["id"] === questionId)[0];
             if (question) {
                 this.currentQuestion = question;
                 this.visible = true;
@@ -50,7 +50,7 @@ export default class Question {
                     @close=${() => this.closeAndPlay()}
                     @save=${() => this.saveQuestion()}
                     @delete=${() => this.deleteQuestion()}
-                    @submit=${() => this.submitAnswer()}
+                    @submit=${event => this.submitAnswer(event)}
                 ></q-popup>
             </div>
         `;
@@ -98,41 +98,50 @@ export default class Question {
         }
     }
 
-    get editable() {
-        return this._editable;
-    }
+    enableAdminMode() {
+        this._editable = true;
 
-    set editable(value) {
-        this._editable = !!value;
-
-        let addQuestionDiv = document.createElement("div");
-        addQuestionDiv.setAttribute("class", "vjs-control vjs-button vken-add-question-icon");
+        let addQuestionButton = document.createElement("div");
+        addQuestionButton.setAttribute("class", "vjs-control vjs-button vken-add-question-button");
         let playbackRateButton = this._controlBar.querySelector(".vjs-playback-rate");
-        playbackRateButton.insertAdjacentElement("beforebegin", addQuestionDiv);
+        playbackRateButton.insertAdjacentElement("beforebegin", addQuestionButton);
 
-        addQuestionDiv.addEventListener("click", (event) => {
-            LOG("Add icon clicked");
+        addQuestionButton.addEventListener("click", _ => {
             let question = JSON.parse(JSON.stringify(questionPlaceholder));
             question.time = parseInt(this._video.currentTime);
             this.currentQuestion = question;
             this.visible = true;
         });
 
+        let analyticsButton = document.createElement("div");
+        analyticsButton.setAttribute("class", "vjs-control vjs-button vken-analytics-button");
+        addQuestionButton.insertAdjacentElement("beforebegin", analyticsButton);
+
+        analyticsButton.addEventListener("click", async _ => {
+            let auth_token = await getAuthToken();
+            window.open(`https://dashboard.videoken.com/analytics/${this._videoId}?token=${auth_token}`, '_blank');
+        });
+
         this.render();
-        LOG("Adding edit icon: Done");
     }
 
-    submitAnswer() {
+    submitAnswer(event) {
         this._currentQuestion.attempted = true;
         this._currentQuestion.selected = this._popupEl._optionsEl.selected;
+
+        let { id, quizId } = this.currentQuestion;
+        let { selected } = event.detail;
+
+        submitQuestion(selected, this._videoId, quizId, id);
     }
 
     async saveQuestion() {
-        let { id, text, options, correct, time } = this._popupEl.editedQuestion();
+        let { text, options, correct, time } = this._popupEl.editedQuestion();
+        let { id, quizId } = this._currentQuestion;
         this._popupEl.status = "saving";
 
         if (id === -1) {
-            let question = await postQuestion({ text, options, correct, time}, this._videoId);
+            let question = await createQuestion({ text, options, correct, time}, this._videoId);
             this._questions.push(question);
             this.insertMarker(question, true);
         } else {
@@ -140,7 +149,7 @@ export default class Question {
             if (index > -1) {
                 this._questions.splice(index, 1);
             }
-            let question = await updateQuestion({ text, options, correct, time}, id, this._videoId);
+            let question = await updateQuestion({ text, options, correct, time}, id, quizId, this._videoId);
             this._questions.push(question);
         }
 
@@ -151,16 +160,15 @@ export default class Question {
 
     async deleteQuestion() {
         this._popupEl.status = "saving";
-        let qId = this.currentQuestion.id;
+        let { id, quizId } = this.currentQuestion;
 
-        await deleteQuestion(qId, this._videoId);
+        await deleteQuestion(quizId, this._videoId);
         let index = this._questions.indexOf(this.currentQuestion);
         if (index > -1) {
             this._questions.splice(index, 1);
         }
 
-        this.removeMarker(qId);
-
+        this.removeMarker(id);
         this._popupEl.status = "save-success";
         await sleep(1000);
         this.visible = false;
@@ -190,14 +198,14 @@ export default class Question {
         const { marker } = el.refs();
         this._timeline.append(el);
 
-        marker.addEventListener("click", (_) => {
+        marker.addEventListener("click", _ => {
             LOG("Clicked on Marker", qId);
             this._EE.emit("marker-click", qId);
         });
     }
 
-    removeMarker(qId) {
-        let marker = this._timeline.querySelector(`[data-qid="${qId}"]`);
+    removeMarker(questionId) {
+        let marker = this._timeline.querySelector(`[data-qid="${questionId}"]`);
         this._timeline.removeChild(marker);
     }
 

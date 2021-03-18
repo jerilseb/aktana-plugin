@@ -1,6 +1,5 @@
 import "./Options";
-import EditorJS from "@editorjs/editorjs";
-import { LOG } from "../lib/util";
+import { LOG, sleep } from "../lib/util";
 import { html, render } from "lit-html";
 import "./popup.scss";
 
@@ -11,7 +10,7 @@ customElements.define(
             return html`
                 <div class="status"></div>
                 <div class="title">${this.editable ? "Edit Question" : "Question"}</div>
-                <div id="q-text" ?contenteditable=${this.editable}></div>
+                <div class="q-text" ?contenteditable=${this.editable} placeholder="Type the question here.."></div>
                 <q-options ?editable=${this.editable}></q-options>
 
                 <div class="submit-button" @click=${() => this.submit()}>SUBMIT</div>
@@ -20,7 +19,7 @@ customElements.define(
                 <div class="resume-button" @click=${() => this.closePopup()}></div>
                 <div class="close-button" @click=${() => this.closePopup()}></div>
                 <div class="delete-confirm">
-                    <div>Are you sure you want to delete this question?</div>
+                    <div class="message">Are you sure you want to delete this question?</div>
                     <div class="row">
                         <div class="yes btn" @click=${() => this.deleteQuestion()}>Yes</div>
                         <div class="no btn" @click=${() => this.status=""}>No</div>
@@ -34,7 +33,7 @@ customElements.define(
 
             this._editor = null;
             this._optionsEl = this.querySelector("q-options");
-            this._questionText = this.querySelector("#q-text");
+            this._questionText = this.querySelector(".q-text");
 
             this.addEventListener("option-change", (event) => {
                 this.selectionActive = this._optionsEl.selected.length > 0;
@@ -88,15 +87,22 @@ customElements.define(
             );
         }
 
-        submit() {
+        async submit() {
             if (this.selectionActive) {
+                let isCorrect = this._optionsEl.revealAnswers(this._correctOptions, this._optionsEl.selected);
+
+                this.status = isCorrect ? "correct-answer" : "wrong-answer";
+                await sleep(1000);
+
                 this.status = "submitted";
-                this._optionsEl.revealAnswers(this._correctOptions, this._optionsEl.selected);
 
                 this.dispatchEvent(
                     new CustomEvent("submit", {
                         bubbles: false,
                         composed: true,
+                        detail: {
+                            selected: this._optionsEl.selected
+                        }
                     })
                 );
             }
@@ -109,7 +115,7 @@ customElements.define(
             this._optionsEl.type = type;
             this._optionsEl.options = options;
             this._correctOptions = correct;
-            this.qID = id;
+            this.questionID = id;
             this.qTime = time;
             this.status = "";
 
@@ -142,7 +148,7 @@ customElements.define(
 
         editedQuestion() {
             return {
-                id: this.qID,
+                id: this.questionID,
                 time: this.qTime,
                 text: this._questionText.innerHTML,
                 options: this._optionsEl.options,
@@ -150,11 +156,11 @@ customElements.define(
             };
         }
 
-        get qID() {
+        get questionID() {
             return parseInt(this.getAttribute("qid"));
         }
 
-        set qID(value) {
+        set questionID(value) {
             this.setAttribute("qid", value);
             this.toggleAttribute("new", value === -1)
         }

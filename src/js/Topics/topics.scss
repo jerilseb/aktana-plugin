@@ -12,7 +12,7 @@ div.vken-topics-popup[visible] ~ .vken-reset-div {
     display: block;
 }
 
-.vken-topics-visible .vjs-control-bar {
+.vken-topics-open .vjs-control-bar {
     opacity: 1 !important;
 }
 
@@ -23,10 +23,6 @@ div.vken-topics-popup[visible] ~ .vken-reset-div {
         background-image: svg-load("../../icons/topics.svg");
         width: 20px;
         height: 20px;
-
-        &:hover {
-            transform: scale(1.2);
-        }
 
         &::after {
             content: "Show Topics";
@@ -49,7 +45,60 @@ div.vken-topics-popup[visible] ~ .vken-reset-div {
         &:hover::after {
             display: flex;
         }
+
+        .topics-hint {
+            display: none;
+            transform: translate(0, -4.6em);
+            background: #3b3b3b;
+            width: max-content;
+            padding: .6em 1.4em;
+            line-height: 2.4;
+            position: absolute;
+            color: #ffffff;
+            font-size: 1.1em;
+            pointer-events: none;
+            font-weight: 500;
+            padding: 8px 18px;
+            will-change: transform;
+
+            &::before {
+                content: '';
+                background: #3b3b3b;
+                width: 1em;
+                height: 1em;
+                transform: rotate(45deg);
+                position: absolute;
+                bottom: -.5em;
+                left: calc(50% - .5em);
+            }
+        }
+
+        &.show-hint .topics-hint {
+            display: block;
+            animation: fade 3.6s linear;
+            animation-fill-mode: forwards;
+        }
+
+        &:not(.show-hint):hover {
+            transform: scale(1.2);
+        }
+
+        @keyframes fade {
+            0% { transform: translate(0, -4.6em); opacity: 1; }
+            10% { transform: translate(0, -5em); opacity: 1; }
+            20% { transform: translate(0, -4.6em); opacity: 1; }
+            30% { transform: translate(0, -5em); opacity: 1; }
+            40% { transform: translate(0, -4.6em); opacity: 1; }
+            50% { transform: translate(0, -5em); opacity: 1; }
+            60% { transform: translate(0, -4.6em); opacity: 1; }
+            90% { transform: translate(0, -4.6em); opacity: 1; }
+            100% {  transform: translate(0, -4.6em); opacity: 0; }
+        }
     }
+}
+
+div.video-js.vken-show-controlbar.vken-show-controlbar .vjs-control-bar {
+    opacity: 1;
 }
 
 .vken-popup.vken-topics-popup {

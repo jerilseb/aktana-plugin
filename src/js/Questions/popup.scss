@@ -59,7 +59,9 @@
             }
         }
 
-        &[status="save-success"] .status {
+        &[status="save-success"] .status,
+        &[status="correct-answer"] .status
+        {
             display: flex;
 
             &::before {
@@ -70,8 +72,9 @@
             }
         }
 
-
-        &[status="save-error"] .status {
+        &[status="save-error"] .status,
+        &[status="wrong-answer"] .status
+        {
             display: flex;
 
             &::before {
@@ -80,6 +83,24 @@
                 height: 50px;
                 background-image: svg-load("../../icons/error.svg");
             }
+        }
+
+        &[status="correct-answer"] .status
+        {
+            background: rgba(255, 255,255, 0.7);
+            animation-name: fade-in-out;
+            animation-duration: 1s;
+            animation-timing-function: linear;
+            animation-fill-mode: forwards;
+        }
+
+        &[status="wrong-answer"] .status
+        {
+            background: rgba(255, 255,255, 0.7);
+            animation-name: fade-in-out;
+            animation-duration: 1s;
+            animation-timing-function: linear;
+            animation-fill-mode: forwards;
         }
 
         &[editable] {
@@ -144,15 +165,30 @@
             letter-spacing: 0.03em;
             cursor: pointer;
             border-radius: 3px;
-        }
 
-        .delete-button::before {
-            content: "";
-            background-image: svg-load("../../icons/delete-light.svg");
-            background-repeat: no-repeat;
-            background-size: contain;
-            width: 20px;
-            height: 20px;
+            &::before {
+                content: "";
+                background-image: svg-load("../../icons/delete-light.svg");
+                background-repeat: no-repeat;
+                background-size: contain;
+                width: 20px;
+                height: 20px;
+            }
+
+            &:hover::after {
+                content: 'Delete question';
+                position: absolute;
+                width: 17ch;
+                height: 1.8em;
+                font-size: 12px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: white;
+                background-color: #444444;
+                border-radius: 3px;
+                transform: translate(0, -3em);
+            }
         }
 
         &:not([editable]) .delete-button, &[new] .delete-button {
@@ -194,12 +230,12 @@
             animation-duration: 1.5s;
         }
 
-        #q-text {
+        .q-text {
             margin-bottom: 0.8em;
             max-height: 9em;
             overflow-y: scroll;
             background: #fafafa;
-            border: 1px solid #cccccc;
+            border: 1px solid #c9c9c9;
             padding: 0.9em;
             overflow-x: hidden;
 
@@ -215,6 +251,22 @@
             * {
                 box-sizing: content-box;
             }
+
+            &[contenteditable] {
+                &:focus {
+                    border-style: dashed;
+                    border-color: #aaaaaa;
+                    // border-width: 2px;
+                }
+
+                &:empty:not(:focus):before {
+                    content: attr(placeholder);
+                    color: #7a7a7a;
+                    cursor: text;
+                    pointer-events: none;
+                    font-style: italic;
+                }
+            }
         }
 
         .delete-confirm {
@@ -224,11 +276,39 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(255, 255,255, 0.9);
+            background: rgba(255, 255,255, 0.92);
             display: none;
             justify-content: center;
-            flex-direction: row;
+            flex-direction: column;
             align-items: center;
+
+            .message {
+                font-size: 20px;
+                font-weight: 500;
+            }
+
+            .row {
+                display: flex;
+                flex-direction: row;
+                margin-top: 12px;
+
+                .btn {
+                    cursor: pointer;
+                    margin: 10px;
+                    padding: 6px 16px;
+                    border-radius: 3px;
+                    color: #ffffff;
+
+                    &.yes {
+                        background-color: #d15858;
+                    }
+
+                    &.no {
+                        background-color: #227fd6;
+                    }
+
+                }
+            }
         }
 
         &[status="confirm-delete"] .delete-confirm {
@@ -244,5 +324,27 @@
 
     to {
         transform: rotate(360deg);
+    }
+}
+
+@keyframes fade-in-out {
+    0% {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    20% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    80% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(0.9);
+        opacity: 0;
     }
 }

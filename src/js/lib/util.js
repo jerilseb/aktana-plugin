@@ -63,3 +63,16 @@ export function getQueryParam(key) {
         }
     }
 }
+
+export async function getAuthToken() {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get(["auth_token"], ({ auth_token }) => {
+            if (auth_token) {
+                resolve(auth_token);
+            } else {
+                resolve(null);
+                // reject("Auth token not found");
+            }
+        });
+    });
+}

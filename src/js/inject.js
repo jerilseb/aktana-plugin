@@ -1,9 +1,7 @@
 import EventEmitter from "eventemitter3";
-import md5 from "fast-md5";
-import { sleep, debounce, getQueryParam, LOG } from "./lib/util";
+import { sleep, LOG, getAuthToken } from "./lib/util";
 import { waitForElementInsertion, waitForElement } from "./lib/domUtil";
 import Question from "./Questions/question";
-// import Topics from "./Topics/topics";
 import Topics from "./Topics/topics";
 
 window.addEventListener("load", async () => {
@@ -76,12 +74,11 @@ async function initialize() {
 
         questions.initialize(videoId);
 
-        chrome.storage.local.get(["auth_token"], ({ auth_token }) => {
-            if (auth_token) {
-                LOG("Auth token found, enabling edit mode");
-                questions.editable = true;
-            }
-        });
+        let auth_token = await getAuthToken();
+        if (auth_token) {
+            LOG("Auth token found, enabling admin mode");
+            questions.enableAdminMode();
+        }
 
         // topics.setupControls(container, controlBar);
         // await topics.getTopcis(videoId);
