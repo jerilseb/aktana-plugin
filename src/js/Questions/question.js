@@ -24,7 +24,7 @@ export default class Question {
             if (this.editable || this.visible) return;
 
             for (let question of this._questions) {
-                const start = question["time"];
+                const start = question.time;
                 if (!question.shown && currentTime >= start && currentTime <= start + 5) {
                     this.currentQuestion = question;
                     this.visible = true;
@@ -34,7 +34,7 @@ export default class Question {
         });
 
         this._EE.on("marker-click", questionId => {
-            let question = this._questions.filter((q) => q["id"] === questionId)[0];
+            let question = this._questions.filter((q) => q.id === questionId)[0];
             if (question) {
                 this.currentQuestion = question;
                 this.visible = true;
@@ -140,22 +140,29 @@ export default class Question {
         let { id, quizId } = this._currentQuestion;
         this._popupEl.status = "saving";
 
-        if (id === -1) {
-            let question = await createQuestion({ text, options, correct, time}, this._videoId);
-            this._questions.push(question);
-            this.insertMarker(question, true);
-        } else {
-            let index = this._questions.indexOf(this.currentQuestion);
-            if (index > -1) {
-                this._questions.splice(index, 1);
+        try {
+            if (id === -1) {
+                let question = await createQuestion({ text, options, correct, time}, this._videoId, this._videoTitle);
+                this._questions.push(question);
+                this.insertMarker(question, true);
+            } else {
+                let question = await updateQuestion({ text, options, correct, time}, id, quizId, this._videoId);
+                let index = this._questions.indexOf(this.currentQuestion);
+                if (index > -1) {
+                    this._questions.splice(index, 1);
+                }
+                this._questions.push(question);
             }
-            let question = await updateQuestion({ text, options, correct, time}, id, quizId, this._videoId);
-            this._questions.push(question);
-        }
 
-        this._popupEl.status = "save-success";
-        await sleep(1000);
-        this.visible = false;
+            this._popupEl.status = "saved";
+            await sleep(1000);
+            this.visible = false;
+
+        } catch(err) {
+            this._popupEl.status = "save-error";
+            await sleep(1500);
+            this.visible = false;
+        }
     }
 
     async deleteQuestion() {
@@ -169,7 +176,7 @@ export default class Question {
         }
 
         this.removeMarker(id);
-        this._popupEl.status = "save-success";
+        this._popupEl.status = "deleted";
         await sleep(1000);
         this.visible = false;
     }
@@ -220,8 +227,9 @@ export default class Question {
         }
     }
 
-    async initialize(videoId) {
+    async initialize(videoId, videoTitle) {
         this._videoId = videoId;
+        this._videoTitle = videoTitle;
         this._timeline = this._container.querySelector(".vjs-progress-control");
 
         this.render();

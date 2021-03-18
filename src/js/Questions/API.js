@@ -102,28 +102,19 @@ export async function updateQuestion ({ text, time, options, correct }, question
             },
     };
 
-    try {
-        let auth_token = await getAuthToken();
+    let auth_token = await getAuthToken();
 
-        const response = await fetch(`${DASHBOARD_API_BASE}/videoquestions/${videoId}/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${auth_token}`
-            },
-            body: JSON.stringify(payload)
-        });
+    const response = await fetch(`${DASHBOARD_API_BASE}/videoquestions/${videoId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${auth_token}`
+        },
+        body: JSON.stringify(payload)
+    });
 
-        const data = await response.json();
-        return transformData(data['question']);
-
-    } catch (error) {
-        LOG(error);
-    }
-
-    question = transformData(payload['question']);
-    questions.push(question);
-    return question;
+    const data = await response.json();
+    return transformData(data['question']);
 }
 
 export async function deleteQuestion (quizId, videoId) {

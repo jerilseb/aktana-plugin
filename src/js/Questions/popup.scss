@@ -14,6 +14,15 @@
         color: #111111;
         font-size: 15px;
 
+        &[editable] {
+            padding-left: 2.5em;
+        }
+
+        &.visible {
+            animation-duration: 0.3s;
+            animation-name: appear;
+        }
+
         .title {
             position: absolute;
             display: flex;
@@ -26,23 +35,36 @@
             color: #ffffff;
             border-radius: 2px;
             z-index: 11;
+
+            &::before {
+                content: "Question"
+            }
         }
 
-        .status {
+        &[editable] .title::before {
+            content: "Edit Question"
+        }
+
+        &[editable][new] .title::before {
+            content: "Create Question"
+        }
+
+        .status-overlay {
             position: absolute;
             z-index: 10;
             top: 0;
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(255, 255,255, 0.9);
+            background: rgba(255, 255,255, 0.5);
+            backdrop-filter: blur(10px);
             display: none;
             justify-content: center;
             flex-direction: column;
             align-items: center;
         }
 
-        &[status="saving"] .status {
+        &[status="saving"] .status-overlay {
             display: flex;
 
             &::before {
@@ -59,57 +81,77 @@
             }
         }
 
-        &[status="save-success"] .status,
-        &[status="correct-answer"] .status
-        {
+        &[status="saved"] .status-overlay,
+        &[status="deleted"] .status-overlay {
             display: flex;
 
             &::before {
                 content: "";
-                width: 50px;
-                height: 50px;
+                width: 60px;
+                height: 60px;
+                background-image: svg-load("../../icons/success.svg");
+            }
+
+            &::after {
+                content: "Saved";
+                font-size: 20px;
+                margin: 12px;
+                letter-spacing: .4px;
+            }
+        }
+
+        &[status="deleted"] .status-overlay::after {
+            content: "Deleted";
+        }
+
+        &[status="save-error"] .status-overlay {
+            display: flex;
+
+            &::before {
+                content: "";
+                width: 60px;
+                height: 60px;
+                background-image: svg-load("../../icons/error.svg");
+            }
+
+            &::after {
+                content: "Network Error";
+                font-size: 20px;
+                margin: 12px;
+                letter-spacing: .4px;
+            }
+        }
+
+        &[status="correct-answer"] .status-overlay {
+            display: flex;
+            background: rgba(255, 255,255, 0.2);
+            animation-name: fade-in-out;
+            animation-duration: 1s;
+            animation-timing-function: linear;
+            animation-fill-mode: forwards;
+
+            &::before {
+                content: "";
+                width: 80px;
+                height: 80px;
                 background-image: svg-load("../../icons/success.svg");
             }
         }
 
-        &[status="save-error"] .status,
-        &[status="wrong-answer"] .status
-        {
+        &[status="wrong-answer"] .status-overlay {
             display: flex;
+            background: rgba(255, 255,255, 0.2);
+            animation-name: fade-in-out;
+            animation-duration: 1s;
+            animation-timing-function: linear;
+            animation-fill-mode: forwards;
 
             &::before {
                 content: "";
-                width: 50px;
-                height: 50px;
+                width: 80px;
+                height: 80px;
                 background-image: svg-load("../../icons/error.svg");
             }
-        }
-
-        &[status="correct-answer"] .status
-        {
-            background: rgba(255, 255,255, 0.7);
-            animation-name: fade-in-out;
-            animation-duration: 1s;
-            animation-timing-function: linear;
-            animation-fill-mode: forwards;
-        }
-
-        &[status="wrong-answer"] .status
-        {
-            background: rgba(255, 255,255, 0.7);
-            animation-name: fade-in-out;
-            animation-duration: 1s;
-            animation-timing-function: linear;
-            animation-fill-mode: forwards;
-        }
-
-        &[editable] {
-            padding-left: 2.5em;
-        }
-
-        &.visible {
-            animation-duration: 0.4s;
-            animation-name: appear;
         }
 
         .close-button {
@@ -140,22 +182,13 @@
             justify-content: center;
             letter-spacing: 0.03em;
             border-radius: 3px;
-        }
-
-        &:not([editable])[selection-active] .submit-button {
             cursor: pointer;
-            display: flex;
-        }
-
-        &[editable][selection-active] .save-button {
-            cursor: pointer;
-            display: flex;
         }
 
         .delete-button {
             width: 2.2em;
             height: 32px;
-            display: flex;
+            display: none;
             position: absolute;
             bottom: 1.5em;
             right: 8em;
@@ -191,10 +224,6 @@
             }
         }
 
-        &:not([editable]) .delete-button, &[new] .delete-button {
-            display: none;
-        }
-
         .resume-button {
             display: none;
             width: 7em;
@@ -202,7 +231,7 @@
             background: #227fd6;
             position: absolute;
             bottom: 1.5em;
-            right: 1.5em;
+            right: 2em;
             color: #ffffff;
             flex-direction: row;
             align-items: center;
@@ -224,10 +253,55 @@
             }
         }
 
-        &[status="submitted"] .resume-button {
+        .delete-confirm-overlay {
+            position: absolute;
+            z-index: 10;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255,255, 0.8);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+
+            .message {
+                font-size: 22px;
+                letter-spacing: .2px;
+            }
+
+            .row {
+                display: flex;
+                flex-direction: row;
+                margin-top: 12px;
+
+                .btn {
+                    cursor: pointer;
+                    margin: 10px;
+                    padding: 6px 16px;
+                    border-radius: 3px;
+                    color: #ffffff;
+
+                    &.yes {
+                        background-color: #d15858;
+                    }
+
+                    &.no {
+                        background-color: #227fd6;
+                    }
+
+                }
+            }
+        }
+
+        &[status="attempting"][selection-active] .submit-button,
+        &[status="editing"][selection-active] .save-button,
+        &[status="editing"]:not([new]) .delete-button,
+        &[status="attempted"] .resume-button,
+        &[status="confirm-delete"] .delete-confirm-overlay {
             display: flex;
-            animation-name: fade-in;
-            animation-duration: 1.5s;
         }
 
         .q-text {
@@ -268,52 +342,6 @@
                 }
             }
         }
-
-        .delete-confirm {
-            position: absolute;
-            z-index: 10;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255,255, 0.92);
-            display: none;
-            justify-content: center;
-            flex-direction: column;
-            align-items: center;
-
-            .message {
-                font-size: 20px;
-                font-weight: 500;
-            }
-
-            .row {
-                display: flex;
-                flex-direction: row;
-                margin-top: 12px;
-
-                .btn {
-                    cursor: pointer;
-                    margin: 10px;
-                    padding: 6px 16px;
-                    border-radius: 3px;
-                    color: #ffffff;
-
-                    &.yes {
-                        background-color: #d15858;
-                    }
-
-                    &.no {
-                        background-color: #227fd6;
-                    }
-
-                }
-            }
-        }
-
-        &[status="confirm-delete"] .delete-confirm {
-            display: flex;
-        }
     }
 }
 
@@ -324,6 +352,16 @@
 
     to {
         transform: rotate(360deg);
+    }
+}
+
+@keyframes appear {
+    from {
+        transform: scale(0.9);
+    }
+
+    to {
+        transform: scale(1);
     }
 }
 

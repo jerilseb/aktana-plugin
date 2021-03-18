@@ -55,6 +55,14 @@ async function initialize() {
         const videoId = "aktana-" + video.duration.toFixed(3).replace(".", "").padStart(8, "0");
         const container = video.parentElement;
         const controlBar = await waitForElement(container, ".vjs-control-bar");
+        const titleDiv = document.querySelector(".container header h1:first-child");
+
+        let videoTitle = null;
+        if(titleDiv && titleDiv.textContent) {
+            videoTitle = titleDiv.textContent.trim();
+            LOG("Title:", videoTitle);
+        }
+
         const questions = new Question(EE, video, controlBar);
         const topics = new Topics(EE, video, controlBar);
 
@@ -72,7 +80,7 @@ async function initialize() {
             }
         }, 1000);
 
-        questions.initialize(videoId);
+        questions.initialize(videoId, videoTitle);
 
         let auth_token = await getAuthToken();
         if (auth_token) {

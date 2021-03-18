@@ -8,8 +8,8 @@ customElements.define(
     class extends HTMLElement {
         get template() {
             return html`
-                <div class="status"></div>
-                <div class="title">${this.editable ? "Edit Question" : "Question"}</div>
+                <div class="status-overlay"></div>
+                <div class="title"></div>
                 <div class="q-text" ?contenteditable=${this.editable} placeholder="Type the question here.."></div>
                 <q-options ?editable=${this.editable}></q-options>
 
@@ -18,11 +18,11 @@ customElements.define(
                 <div class="delete-button" @click=${() => this.confirmDeletion()}></div>
                 <div class="resume-button" @click=${() => this.closePopup()}></div>
                 <div class="close-button" @click=${() => this.closePopup()}></div>
-                <div class="delete-confirm">
+                <div class="delete-confirm-overlay">
                     <div class="message">Are you sure you want to delete this question?</div>
                     <div class="row">
                         <div class="yes btn" @click=${() => this.deleteQuestion()}>Yes</div>
-                        <div class="no btn" @click=${() => this.status=""}>No</div>
+                        <div class="no btn" @click=${() => this.status="editing"}>No</div>
                     </div>
                 </div>
             `;
@@ -94,7 +94,7 @@ customElements.define(
                 this.status = isCorrect ? "correct-answer" : "wrong-answer";
                 await sleep(1000);
 
-                this.status = "submitted";
+                this.status = "attempted";
 
                 this.dispatchEvent(
                     new CustomEvent("submit", {
@@ -109,7 +109,6 @@ customElements.define(
         }
 
         set question(question) {
-            // debugger
             const { id, text, options, type, correct, time, attempted, selected } = question;
 
             this._optionsEl.type = type;
@@ -117,33 +116,21 @@ customElements.define(
             this._correctOptions = correct;
             this.questionID = id;
             this.qTime = time;
-            this.status = "";
-
-            if(this.editable && correct) {
-                this._optionsEl.selected = correct;
-                this.selectionActive = true;
-            } else {
-                this.selectionActive = false;
-            }
-
             this._questionText.innerHTML = text;
 
-            if(attempted) {
-                this.status = "submitted";
+            if(this.editable) {
+                if(correct) {
+                    this._optionsEl.selected = correct;
+                    this.selectionActive = true;
+                }
+                this.status = "editing";
+            } else if(attempted) {
+                this.status = "attempted";
                 this._optionsEl.revealAnswers(this._correctOptions, selected);
+            } else {
+                this.status = "attempting";
+                this.selectionActive = false;
             }
-
-            // try {
-            //     this._editor = new EditorJS({
-            //         holder: "q-text",
-            //         data: text,
-            //         readOnly: !this.editable,
-            //     });
-
-
-            // } catch (err) {
-            //     console.error("AKTANA:", err);
-            // }
         }
 
         editedQuestion() {

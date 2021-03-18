@@ -64,7 +64,7 @@ export default class Popup {
         this._controlBar.parentElement.classList.add('vken-show-controlbar');
         await sleep(3600);
         this._controlBar.parentElement.classList.remove('vken-show-controlbar')
-        button.classList.remove("topics-show-hint");
+        button.classList.remove("show-hint");
     }
 
 

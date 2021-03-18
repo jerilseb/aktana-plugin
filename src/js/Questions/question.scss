@@ -67,6 +67,7 @@
             animation-duration: 0.5s;
             // animation-fill-mode: forwards;
             animation-timing-function: ease-in;
+            animation-delay: 1s;
         }
 
         @keyframes drop {
@@ -147,12 +148,12 @@
         }
 
         &::after {
-            content: "View Analytics";
+            content: "Question Analytics";
             position: absolute;
             display: none;
             justify-content: center;
             align-items: center;
-            width: 7.5em;
+            width: 17ch;
             height: 2em;
             background: rgba(10, 10, 10, 0.75);
             transform: translate(-3em, -5em);
