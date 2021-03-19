@@ -119,7 +119,7 @@ export default class Question {
 
         analyticsButton.addEventListener("click", async _ => {
             let auth_token = await getAuthToken();
-            window.open(`https://dashboard.videoken.com/analytics/${this._videoId}?token=${auth_token}`, '_blank');
+            window.open(`https://dashboard.videoken.com/quiz-analytics/${this._videoId}?token=${auth_token}`, '_blank');
         });
 
         this.render();

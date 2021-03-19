@@ -146,10 +146,8 @@ export async function submitQuestion(selectedOptions, videoId, quizId, questionI
                 [questionId]: selectedOptions
             },
             skipped: []
-        },
-        user_id: 999999
+        }
     }
-
     const response = await fetch(`${DASHBOARD_API_BASE}/${videoId}/video-quiz/${quizId}/submit/`, {
         method: 'POST',
         headers: {

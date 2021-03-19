@@ -39,15 +39,19 @@ async function initialize() {
     }
 
     function setupVideo() {
-        if (video.duration) {
-            LOG("Metadata already loaded", video.duration);
-            setupControls();
-        } else {
-            LOG("Waiting for metadata", video.duration);
-            video.addEventListener("loadedmetadata", async () => {
-                LOG("Metadata loaded");
+        if(/learning\/content/.test(location.pathname)) {
+            if (video.duration) {
+                LOG("Metadata already loaded", video.duration);
                 setupControls();
-            });
+            } else {
+                LOG("Waiting for metadata", video.duration);
+                video.addEventListener("loadedmetadata", async () => {
+                    LOG("Metadata loaded");
+                    setupControls();
+                });
+            }
+        } else {
+            LOG("Skipping video");
         }
     }
 
