@@ -46,7 +46,7 @@
         }
 
         &[editable][new] .title::before {
-            content: "Create Question"
+            content: "New Question"
         }
 
         .status-overlay {
@@ -125,7 +125,7 @@
         &[status="correct-answer"] .status-overlay {
             display: flex;
             background: rgba(255, 255,255, 0.2);
-            animation-name: fade-in-out;
+            animation-name: fade-out;
             animation-duration: 1s;
             animation-timing-function: linear;
             animation-fill-mode: forwards;
@@ -141,7 +141,7 @@
         &[status="wrong-answer"] .status-overlay {
             display: flex;
             background: rgba(255, 255,255, 0.2);
-            animation-name: fade-in-out;
+            animation-name: fade-out;
             animation-duration: 1s;
             animation-timing-function: linear;
             animation-fill-mode: forwards;
@@ -183,6 +183,14 @@
             letter-spacing: 0.03em;
             border-radius: 3px;
             cursor: pointer;
+        }
+
+        .save-button::before {
+            content: "SAVE";
+        }
+
+        &[new] .save-button::before {
+            content: "CREATE";
         }
 
         .delete-button {
@@ -377,6 +385,23 @@
     }
 
     80% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+}
+
+@keyframes fade-out {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    70% {
         transform: scale(1);
         opacity: 1;
     }

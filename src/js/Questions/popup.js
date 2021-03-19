@@ -14,7 +14,7 @@ customElements.define(
                 <q-options ?editable=${this.editable}></q-options>
 
                 <div class="submit-button" @click=${() => this.submit()}>SUBMIT</div>
-                <div class="save-button" @click=${() => this.saveQuestion()}>SAVE</div>
+                <div class="save-button" @click=${() => this.saveQuestion()}></div>
                 <div class="delete-button" @click=${() => this.confirmDeletion()}></div>
                 <div class="resume-button" @click=${() => this.closePopup()}></div>
                 <div class="close-button" @click=${() => this.closePopup()}></div>
@@ -117,19 +117,19 @@ customElements.define(
             this.questionID = id;
             this.qTime = time;
             this._questionText.innerHTML = text;
+            this.selectionActive = false;
 
             if(this.editable) {
+                this.status = "editing";
                 if(correct) {
                     this._optionsEl.selected = correct;
                     this.selectionActive = true;
                 }
-                this.status = "editing";
             } else if(attempted) {
                 this.status = "attempted";
                 this._optionsEl.revealAnswers(this._correctOptions, selected);
             } else {
                 this.status = "attempting";
-                this.selectionActive = false;
             }
         }
 
