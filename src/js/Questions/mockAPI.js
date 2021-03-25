@@ -92,6 +92,10 @@ export async function deleteQuestion (questionId, videoId) {
     return true
 }
 
+export async function submitQuestion(selectedOptions, videoId, quizId, questionId) {
+    await sleep(1000);
+}
+
 function transformData(data) {
     let q = {};
     let { question, appears_at } = data;

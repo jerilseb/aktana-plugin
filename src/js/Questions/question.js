@@ -1,6 +1,6 @@
 import "@webcomponents/custom-elements";
 import { html, render } from "lit-html";
-// import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion } from "./mockAPI";
+// import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion, submitQuestion } from "./mockAPI";
 import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion, submitQuestion } from "./API";
 import questionPlaceholder from "./questionPlaceholder";
 import { secondsToHours, sleep } from "../lib/util";

@@ -234,7 +234,7 @@
 
         .resume-button {
             display: none;
-            width: 7em;
+            width: 7.5em;
             height: 32px;
             background: #227fd6;
             position: absolute;
@@ -248,7 +248,7 @@
             cursor: pointer;
 
             &::before {
-                content: "RESUME";
+                content: "CONTINUE";
                 font-weight: 500;
                 margin: 0.25em;
             }
