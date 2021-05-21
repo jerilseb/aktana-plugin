@@ -33,7 +33,7 @@ div.vken-topics-popup[visible] ~ .vken-reset-div {
             width: 7.5em;
             height: 2em;
             background: rgba(10, 10, 10, 0.75);
-            transform: translate(-3em, -5em);
+            transform: translate(-2em, -4em);
             color: #fff;
             pointer-events: none;
             border-radius: 2px;
@@ -51,7 +51,7 @@ div.vken-topics-popup[visible] ~ .vken-reset-div {
             transform: translate(0, -4.6em);
             background: #3b3b3b;
             width: max-content;
-            padding: .6em 1.4em;
+            padding: 0.6em 1.4em;
             line-height: 2.4;
             position: absolute;
             color: #ffffff;
@@ -62,14 +62,14 @@ div.vken-topics-popup[visible] ~ .vken-reset-div {
             will-change: transform;
 
             &::before {
-                content: '';
+                content: "";
                 background: #3b3b3b;
                 width: 1em;
                 height: 1em;
                 transform: rotate(45deg);
                 position: absolute;
-                bottom: -.5em;
-                left: calc(50% - .5em);
+                bottom: -0.5em;
+                left: calc(50% - 0.5em);
             }
         }
 
@@ -84,15 +84,42 @@ div.vken-topics-popup[visible] ~ .vken-reset-div {
         }
 
         @keyframes fade {
-            0% { transform: translate(0, -4.6em); opacity: 1; }
-            10% { transform: translate(0, -5em); opacity: 1; }
-            20% { transform: translate(0, -4.6em); opacity: 1; }
-            30% { transform: translate(0, -5em); opacity: 1; }
-            40% { transform: translate(0, -4.6em); opacity: 1; }
-            50% { transform: translate(0, -5em); opacity: 1; }
-            60% { transform: translate(0, -4.6em); opacity: 1; }
-            90% { transform: translate(0, -4.6em); opacity: 1; }
-            100% {  transform: translate(0, -4.6em); opacity: 0; }
+            0% {
+                transform: translate(0, -4.6em);
+                opacity: 1;
+            }
+            10% {
+                transform: translate(0, -5em);
+                opacity: 1;
+            }
+            20% {
+                transform: translate(0, -4.6em);
+                opacity: 1;
+            }
+            30% {
+                transform: translate(0, -5em);
+                opacity: 1;
+            }
+            40% {
+                transform: translate(0, -4.6em);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(0, -5em);
+                opacity: 1;
+            }
+            60% {
+                transform: translate(0, -4.6em);
+                opacity: 1;
+            }
+            90% {
+                transform: translate(0, -4.6em);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(0, -4.6em);
+                opacity: 0;
+            }
         }
     }
 }

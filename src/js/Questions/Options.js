@@ -2,7 +2,6 @@ import { LOG } from "../lib/util";
 import "./Option";
 import { template } from "../lib/domUtil";
 
-
 customElements.define(
     "q-options",
     class extends HTMLElement {
@@ -12,7 +11,7 @@ customElements.define(
         }
 
         connectedCallback() {
-            this.addEventListener("option-change", (event) => {
+            this.addEventListener("option-change", event => {
                 if (this.type === "single") {
                     for (let element of this.optionElements) {
                         element.selected = false;
@@ -32,42 +31,51 @@ customElements.define(
                 <div ref="editPopup" class="option-edit-popup">
                     <div ref="addButton" class="add-option popup-button"></div>
                     <div ref="deleteButton" class="delete-option popup-button"></div>
+                    <div ref="switchButton" class="switch-option popup-button"></div>
                 </div>
             `;
 
-            let { editPopup, addButton, deleteButton } = el.refs();
+            let { editPopup, addButton, deleteButton, switchButton } = el.refs();
             this.append(el);
             this._editPopup = editPopup;
 
             this.addEventListener("option-edit", event => {
+                const isDismiss = event.target.editing;
                 this.resetEdit();
 
-                if(!event.target.editing) {
+                if (!isDismiss) {
+                    LOG("show edit for", event.target.editing);
+
                     event.target.editing = true;
-                    this.showEditPopup(this.optionElements.indexOf(event.target) , event.target.offsetTop);
+                    this.showEditPopup(this.optionElements.indexOf(event.target), event.target.offsetTop);
                 }
             });
 
-            this.addEventListener('click', _ => {
+            this.addEventListener("click", _ => {
                 LOG("Clicked outside");
                 this.resetEdit();
             });
 
-            addButton.addEventListener('click', _ => {
-                let index = parseInt(this._editPopup.getAttribute('index'));
-                let element = this.createOption('');
+            addButton.addEventListener("click", _ => {
+                let index = parseInt(this._editPopup.getAttribute("index"));
+                let element = this.createOption("");
                 let current = this.optionElements[index];
-                current.insertAdjacentElement('afterend', element);
+                current.insertAdjacentElement("afterend", element);
             });
 
-            deleteButton.addEventListener('click', _ => {
-                let index = parseInt(this._editPopup.getAttribute('index'));
+            deleteButton.addEventListener("click", _ => {
+                let index = parseInt(this._editPopup.getAttribute("index"));
                 this.removeChild(this.optionElements[index]);
+            });
+
+            switchButton.addEventListener("click", _ => {
+                if (this.type === "single") this.type = "multi";
+                else this.type = "single";
             });
         }
 
         resetEdit() {
-            for( let option of this.optionElements) {
+            for (let option of this.optionElements) {
                 option.editing = false;
             }
             this.hideEditPopup();
@@ -75,6 +83,10 @@ customElements.define(
 
         set type(value) {
             this.setAttribute("type", value);
+            for (let option of this.optionElements) {
+                option.type = value;
+            }
+            this.selected = [];
         }
 
         get type() {
@@ -86,12 +98,22 @@ customElements.define(
         }
 
         set selected(values) {
-            for( let idx of values) {
-                if(idx < this.optionElements.length) {
-                    this.optionElements[idx].selected = true;
+            for (let i = 0; i < this.optionElements.length; i++) {
+                let element = this.optionElements[i];
+                if (values.includes(i)) {
+                    element.selected = true;
+                } else {
+                    element.selected = false;
                 }
             }
+
             this._selectedIdx = values;
+            this.dispatchEvent(
+                new CustomEvent("option-change", {
+                    bubbles: true,
+                    composed: true,
+                })
+            );
         }
 
         get optionElements() {
@@ -111,7 +133,7 @@ customElements.define(
         }
 
         get options() {
-            return this.optionElements.map((option) => option.text);
+            return this.optionElements.map(option => option.text);
         }
 
         set options(values) {
@@ -136,7 +158,7 @@ customElements.define(
         }
 
         destroyOptions() {
-            for( let element of this.optionElements) {
+            for (let element of this.optionElements) {
                 this.removeChild(element);
             }
         }
@@ -163,12 +185,12 @@ customElements.define(
 
         showEditPopup(index, offset) {
             this._editPopup.style.top = offset + "px";
-            this._editPopup.setAttribute('index', index);
-            this._editPopup.classList.add('visible');
+            this._editPopup.setAttribute("index", index);
+            this._editPopup.classList.add("visible");
         }
 
         hideEditPopup() {
-            this._editPopup.classList.remove('visible');
+            this._editPopup.classList.remove("visible");
         }
     }
 );

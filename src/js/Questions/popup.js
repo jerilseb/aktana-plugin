@@ -22,7 +22,7 @@ customElements.define(
                     <div class="message">Are you sure you want to delete this question?</div>
                     <div class="row">
                         <div class="yes btn" @click=${() => this.deleteQuestion()}>Yes</div>
-                        <div class="no btn" @click=${() => this.status="editing"}>No</div>
+                        <div class="no btn" @click=${() => (this.status = "editing")}>No</div>
                     </div>
                 </div>
             `;
@@ -69,7 +69,7 @@ customElements.define(
         }
 
         confirmDeletion() {
-            this.status="confirm-delete";
+            this.status = "confirm-delete";
         }
 
         // reset() {
@@ -101,8 +101,8 @@ customElements.define(
                         bubbles: false,
                         composed: true,
                         detail: {
-                            selected: this._optionsEl.selected
-                        }
+                            selected: this._optionsEl.selected,
+                        },
                     })
                 );
             }
@@ -119,13 +119,13 @@ customElements.define(
             this._questionText.innerHTML = text;
             this.selectionActive = false;
 
-            if(this.editable) {
+            if (this.editable) {
                 this.status = "editing";
-                if(correct) {
+                if (correct) {
                     this._optionsEl.selected = correct;
                     this.selectionActive = true;
                 }
-            } else if(attempted) {
+            } else if (attempted) {
                 this.status = "attempted";
                 this._optionsEl.revealAnswers(this._correctOptions, selected);
             } else {
@@ -149,7 +149,7 @@ customElements.define(
 
         set questionID(value) {
             this.setAttribute("qid", value);
-            this.toggleAttribute("new", value === -1)
+            this.toggleAttribute("new", value === -1);
         }
 
         get qTime() {

@@ -1,7 +1,7 @@
 import "@webcomponents/custom-elements";
 import { html, render } from "lit-html";
-// import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion, submitQuestion } from "./mockAPI";
-import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion, submitQuestion } from "./API";
+import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion, submitQuestion } from "./mockAPI";
+// import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion, submitQuestion } from "./API";
 import questionPlaceholder from "./questionPlaceholder";
 import { secondsToHours, sleep } from "../lib/util";
 import { LOG, getAuthToken } from "../lib/util";
@@ -20,7 +20,7 @@ export default class Question {
         this._currentQuestion = null;
         this._EE = EE;
 
-        this._EE.on("time-update", (currentTime) => {
+        this._EE.on("time-update", currentTime => {
             if (this.editable || this.visible) return;
 
             for (let question of this._questions) {
@@ -34,7 +34,7 @@ export default class Question {
         });
 
         this._EE.on("marker-click", questionId => {
-            let question = this._questions.filter((q) => q.id === questionId)[0];
+            let question = this._questions.filter(q => q.id === questionId)[0];
             if (question) {
                 this.currentQuestion = question;
                 this.visible = true;
@@ -87,7 +87,7 @@ export default class Question {
     }
 
     set visible(value) {
-        if(value && this._currentQuestion) {
+        if (value && this._currentQuestion) {
             this._video.pause();
             this._popupEl.visible = true;
             this._el.classList.toggle("visible", true);
@@ -119,7 +119,7 @@ export default class Question {
 
         analyticsButton.addEventListener("click", async _ => {
             let auth_token = await getAuthToken();
-            window.open(`https://dashboard.videoken.com/quiz-analytics/${this._videoId}?token=${auth_token}`, '_blank');
+            window.open(`https://dashboard.videoken.com/quiz-analytics/${this._videoId}?token=${auth_token}`, "_blank");
         });
 
         this.render();
@@ -142,11 +142,11 @@ export default class Question {
 
         try {
             if (id === -1) {
-                let question = await createQuestion({ text, options, correct, time}, this._videoId, this._videoTitle);
+                let question = await createQuestion({ text, options, correct, time }, this._videoId, this._videoTitle);
                 this._questions.push(question);
                 this.insertMarker(question, true);
             } else {
-                let question = await updateQuestion({ text, options, correct, time}, id, quizId, this._videoId);
+                let question = await updateQuestion({ text, options, correct, time }, id, quizId, this._videoId);
                 let index = this._questions.indexOf(this.currentQuestion);
                 if (index > -1) {
                     this._questions.splice(index, 1);
@@ -157,8 +157,7 @@ export default class Question {
             this._popupEl.status = "saved";
             await sleep(1000);
             this.visible = false;
-
-        } catch(err) {
+        } catch (err) {
             this._popupEl.status = "save-error";
             await sleep(1500);
             this.visible = false;
@@ -246,4 +245,3 @@ export default class Question {
         }
     }
 }
-

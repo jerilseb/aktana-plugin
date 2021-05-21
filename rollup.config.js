@@ -22,5 +22,8 @@ export default [
                 plugins: [inlineSvg()],
             }),
         ],
+        watch: {
+            clearScreen: false,
+        },
     },
 ];

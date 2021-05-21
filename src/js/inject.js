@@ -1,4 +1,4 @@
-import EventEmitter from "eventemitter3";
+import EventEmitter from "emittery";
 import { sleep, LOG, getAuthToken } from "./lib/util";
 import { waitForElementInsertion, waitForElement } from "./lib/domUtil";
 import Question from "./Questions/question";
@@ -18,7 +18,7 @@ async function initialize() {
     const EE = new EventEmitter();
     let video = null;
 
-    EE.on("seek-video", (time) => {
+    EE.on("seek-video", time => {
         if (video) {
             video.currentTime = time;
             video.play();
@@ -39,12 +39,12 @@ async function initialize() {
     }
 
     function setupVideo() {
-        if(/learning\/content/.test(location.pathname)) {
+        if (/learning\/content/.test(location.pathname)) {
             if (video.duration) {
                 LOG("Metadata already loaded", video.duration);
                 setupControls();
             } else {
-                LOG("Waiting for metadata", video.duration);
+                LOG("Waiting for metadata");
                 video.addEventListener("loadedmetadata", async () => {
                     LOG("Metadata loaded");
                     setupControls();
@@ -62,7 +62,7 @@ async function initialize() {
         const titleDiv = document.querySelector(".container header h1:first-child");
 
         let videoTitle = null;
-        if(titleDiv && titleDiv.textContent) {
+        if (titleDiv && titleDiv.textContent) {
             videoTitle = titleDiv.textContent.trim();
             LOG("Title:", videoTitle);
         }
