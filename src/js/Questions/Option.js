@@ -18,7 +18,7 @@ customElements.define(
             checkBox.addEventListener("click", _ => {
                 if (this.status === "active") {
                     this.dispatchEvent(
-                        new CustomEvent("option-change", {
+                        new CustomEvent("option-click", {
                             bubbles: true,
                             composed: true,
                         })
@@ -30,7 +30,7 @@ customElements.define(
                 event.stopPropagation();
 
                 this.dispatchEvent(
-                    new CustomEvent("option-edit", {
+                    new CustomEvent("option-edit-click", {
                         bubbles: true,
                         composed: true
                     })

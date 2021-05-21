@@ -11,7 +11,7 @@ customElements.define(
         }
 
         connectedCallback() {
-            this.addEventListener("option-change", event => {
+            this.addEventListener("option-click", event => {
                 if (this.type === "single") {
                     for (let element of this.optionElements) {
                         element.selected = false;
@@ -25,10 +25,17 @@ customElements.define(
                         this._selectedIdx.push(element.index);
                     }
                 }
+
+                this.dispatchEvent(
+                    new CustomEvent("option-change", {
+                        bubbles: true,
+                        composed: true,
+                    })
+                );
             });
 
             let el = template`
-                <div ref="editPopup" class="option-edit-popup">
+                <div ref="editPopup" class="option-edit-click-popup">
                     <div ref="addButton" class="add-option popup-button"></div>
                     <div ref="deleteButton" class="delete-option popup-button"></div>
                     <div ref="switchButton" class="switch-option popup-button"></div>
@@ -39,7 +46,7 @@ customElements.define(
             this.append(el);
             this._editPopup = editPopup;
 
-            this.addEventListener("option-edit", event => {
+            this.addEventListener("option-edit-click", event => {
                 const isDismiss = event.target.editing;
                 this.resetEdit();
 

@@ -123,7 +123,7 @@ customElements.define(
                 this.status = "editing";
                 if (correct) {
                     this._optionsEl.selected = correct;
-                    this.selectionActive = true;
+                    // this.selectionActive = true;
                 }
             } else if (attempted) {
                 this.status = "attempted";
@@ -140,6 +140,7 @@ customElements.define(
                 text: this._questionText.innerHTML,
                 options: this._optionsEl.options,
                 correct: this._optionsEl.selected,
+                type: this._optionsEl.type
             };
         }
 

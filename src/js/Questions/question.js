@@ -136,17 +136,17 @@ export default class Question {
     }
 
     async saveQuestion() {
-        let { text, options, correct, time } = this._popupEl.editedQuestion();
+        let { text, options, correct, time, type } = this._popupEl.editedQuestion();
         let { id, quizId } = this._currentQuestion;
         this._popupEl.status = "saving";
 
         try {
             if (id === -1) {
-                let question = await createQuestion({ text, options, correct, time }, this._videoId, this._videoTitle);
+                let question = await createQuestion({ text, options, correct, time, type }, this._videoId, this._videoTitle);
                 this._questions.push(question);
                 this.insertMarker(question, true);
             } else {
-                let question = await updateQuestion({ text, options, correct, time }, id, quizId, this._videoId);
+                let question = await updateQuestion({ text, options, correct, time, type }, id, quizId, this._videoId);
                 let index = this._questions.indexOf(this.currentQuestion);
                 if (index > -1) {
                     this._questions.splice(index, 1);
