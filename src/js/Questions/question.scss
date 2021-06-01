@@ -52,13 +52,13 @@
             position: absolute;
             background-image: svg-load("../../icons/question.svg");
             background-repeat: no-repeat;
-            transform: translateY(-18px);
+            transform: translateY(-18px) scale(1.1);
             transform-origin: bottom;
             transition: transform 0.1s linear;
 
             &:hover {
                 cursor: pointer;
-                transform: translateY(-18px) scale(1.25);
+                transform: translateY(-18px) scale(1.3);
             }
         }
 

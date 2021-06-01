@@ -16,6 +16,7 @@ customElements.define(
                 <div class="submit-button" @click=${() => this.submit()}>SUBMIT</div>
                 <div class="save-button" @click=${() => this.saveQuestion()}></div>
                 <div class="delete-button" @click=${() => this.confirmDeletion()}></div>
+                <div class="edit-time-button" @click=${() => {}}></div>
                 <div class="resume-button" @click=${() => this.closePopup()}></div>
                 <div class="close-button" @click=${() => this.closePopup()}></div>
                 <div class="delete-confirm-overlay">

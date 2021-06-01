@@ -11,7 +11,7 @@
             position: absolute;
             display: none;
             width: 7em;
-            height: 2em;
+            height: 2.2em;
             // height: 40px;
             background: white;
             transform: translate(27px, -12px);
@@ -45,13 +45,13 @@
                             content: "Insert option below";
                             position: absolute;
                             width: 20ch;
-                            height: 1.8em;
-                            font-size: 12px;
+                            height: 2em;
+                            font-size: 13px;
                             display: flex;
                             justify-content: center;
                             align-items: center;
                             color: white;
-                            background-color: #444444;
+                            background-color: #4A4A4A;
                             border-radius: 3px;
                             transform: translate(-5ch, -2.5em);
                         }
@@ -69,13 +69,13 @@
                             content: "Remove option";
                             position: absolute;
                             width: 15ch;
-                            height: 1.8em;
-                            font-size: 12px;
+                            height: 2em;
+                            font-size: 13px;
                             display: flex;
                             justify-content: center;
                             align-items: center;
                             color: white;
-                            background-color: #444444;
+                            background-color: #4A4A4A;
                             border-radius: 3px;
                             transform: translate(-5ch, -2.6em);
                         }
@@ -85,7 +85,7 @@
         }
 
         &[type="single"] .popup-button.switch-option {
-            background-image: svg-load("../../icons/checkbox.svg");
+            background-image: svg-load("../../icons/multiple-choice.svg");
 
             &:hover {
                 transform: scale(1.1);
@@ -95,13 +95,13 @@
                     content: "Change to multiple choice";
                     position: absolute;
                     width: 24ch;
-                    height: 1.8em;
-                    font-size: 12px;
+                    height: 2em;
+                    font-size: 13px;
                     display: flex;
                     justify-content: center;
                     align-items: center;
                     color: white;
-                    background-color: #444444;
+                    background-color: #4A4A4A;
                     border-radius: 3px;
                     transform: translate(-5ch, -2.6em);
                 }
@@ -109,7 +109,7 @@
         }
 
         &[type="multi"] .popup-button.switch-option {
-            background-image: svg-load("../../icons/checkbox.svg");
+            background-image: svg-load("../../icons/single-choice.svg");
 
             &:hover {
                 transform: scale(1.1);
@@ -119,13 +119,13 @@
                     content: "Change to single choice";
                     position: absolute;
                     width: 23ch;
-                    height: 1.8em;
-                    font-size: 12px;
+                    height: 2em;
+                    font-size: 13px;
                     display: flex;
                     justify-content: center;
                     align-items: center;
                     color: white;
-                    background-color: #444444;
+                    background-color: #4A4A4A;
                     border-radius: 3px;
                     transform: translate(-5ch, -2.6em);
                 }
