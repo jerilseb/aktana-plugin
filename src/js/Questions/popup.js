@@ -158,6 +158,7 @@ customElements.define(
                 text: this._questionText.innerHTML,
                 options: this._optionsEl.options,
                 correct: this._optionsEl.selected,
+                correct_text: this._optionsEl.selectedOptionsText,
                 type: this._optionsEl.type
             };
         }

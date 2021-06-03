@@ -14,7 +14,7 @@ export async function fetchQuestions(videoId) {
     return questions;
 }
 
-export async function createQuestion ({ text, time, options, correct, type }, videoId) {
+export async function createQuestion ({ text, time, options, correct, correct_text, type }, videoId) {
     let questions = JSON.parse(localStorage.getItem(videoId)) || [];
     let questionId = getRandomInt(10000);
     let quizId = getRandomInt(10000);
@@ -30,7 +30,7 @@ export async function createQuestion ({ text, time, options, correct, type }, vi
                         }
                     ]},
             options: { options },
-            answer: { answer: correct },
+            answer: { answer: correct, answer_text: correct_text },
             type: questionType,
             difficulty: "Moderate"
         },
@@ -45,11 +45,11 @@ export async function createQuestion ({ text, time, options, correct, type }, vi
     return transformData(data);
 }
 
-export async function updateQuestion ({ text, time, options, correct, type }, questionId, quizId, videoId) {
+export async function updateQuestion ({ text, time, options, correct, correct_text, type }, questionId, quizId, videoId) {
     let questions = JSON.parse(localStorage.getItem(videoId)) || [];
     const questionType = type === "single" ? "MCQ-Single-Correct" : "MCQ-Multiple-Correct"
 
-    let question = questions.find(q => q.quiz_id === quizId);
+    let question = questions.find(q => q.question.id === questionId);
     let index = questions.indexOf(question);
 
     if (index > -1) {
@@ -66,7 +66,7 @@ export async function updateQuestion ({ text, time, options, correct, type }, qu
                         }
                     ]},
             options: { options },
-            answer: { answer: correct },
+            answer: { answer: correct, answer_text: correct_text },
             type: questionType,
             difficulty: "Moderate"
         },

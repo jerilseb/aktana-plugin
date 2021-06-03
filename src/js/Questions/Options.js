@@ -119,6 +119,16 @@ customElements.define(
             );
         }
 
+        get selectedOptionsText() {
+            let selected = [];
+            for (let option of this.optionElements) {
+                if (option.selected) {
+                    selected.push(option.text);
+                }
+            }
+            return selected;
+        }
+
         get optionElements() {
             return Array.from(this.querySelectorAll("q-option"));
         }

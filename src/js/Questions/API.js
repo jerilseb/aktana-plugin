@@ -25,7 +25,9 @@ export async function fetchQuestions(videoId) {
     return questions;
 }
 
-export async function createQuestion ({ text, time, options, correct }, videoId, videoTitle) {
+export async function createQuestion ({ text, time, options, correct, correct_text, type }, videoId, videoTitle) {
+    const questionType = type === "single" ? "MCQ-Single-Correct" : "MCQ-Multiple-Correct"
+
     const payload = {
         title: videoTitle,
         question: {
@@ -41,9 +43,9 @@ export async function createQuestion ({ text, time, options, correct }, videoId,
                     options: { options },
                     answer: {
                         answer: correct,
-                        answer_text: [options[correct]]
+                        answer_text: correct_text
                     },
-                    type: "MCQ-Single-Correct",
+                    type: questionType,
                     difficulty: "Moderate"
                 }
             },
@@ -69,7 +71,7 @@ export async function createQuestion ({ text, time, options, correct }, videoId,
     }
 }
 
-export async function updateQuestion ({ text, time, options, correct }, questionId, quizId, videoId) {
+export async function updateQuestion ({ text, time, options, correct, correct_text, type }, questionId, quizId, videoId) {
     let questions = JSON.parse(localStorage.getItem(videoId)) || [];
 
     let question = questions.find(q => q.question.id === questionId);
@@ -77,6 +79,7 @@ export async function updateQuestion ({ text, time, options, correct }, question
     if (index > -1) {
         questions.splice(index, 1);
     }
+    const questionType = type === "single" ? "MCQ-Single-Correct" : "MCQ-Multiple-Correct";
 
     const payload = {
         question: {
@@ -94,9 +97,9 @@ export async function updateQuestion ({ text, time, options, correct }, question
                     options: { options },
                     answer: {
                         answer: correct,
-                        answer_text: [options[correct]]
+                        answer_text: correct_text
                     },
-                    type: "MCQ-Single-Correct",
+                    type: questionType,
                     difficulty: "Moderate"
                 }
             },

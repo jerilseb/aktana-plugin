@@ -1,7 +1,7 @@
 import "@webcomponents/custom-elements";
 import { html, render } from "lit-html";
-import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion, submitQuestion } from "./mockAPI";
-// import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion, submitQuestion } from "./API";
+// import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion, submitQuestion } from "./mockAPI";
+import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion, submitQuestion } from "./API";
 import questionPlaceholder from "./questionPlaceholder";
 import { secondsToHours, sleep } from "../lib/util";
 import { LOG, getAuthToken } from "../lib/util";
@@ -136,17 +136,17 @@ export default class Question {
     }
 
     async saveQuestion() {
-        let { text, options, correct, time, type } = this._popupEl.editedQuestion();
+        let { text, options, correct, correct_text, time, type } = this._popupEl.editedQuestion();
         let { id, quizId } = this._currentQuestion;
         this._popupEl.status = "saving";
 
         try {
             if (id === -1) {
-                let question = await createQuestion({ text, options, correct, time, type }, this._videoId, this._videoTitle);
+                let question = await createQuestion({ text, options, correct, correct_text, time, type }, this._videoId, this._videoTitle);
                 this._questions.push(question);
                 this.insertMarker(question, true);
             } else {
-                let question = await updateQuestion({ text, options, correct, time, type }, id, quizId, this._videoId);
+                let question = await updateQuestion({ text, options, correct, correct_text, time, type }, id, quizId, this._videoId);
                 let index = this._questions.indexOf(this.currentQuestion);
                 if (index > -1) {
                     this._questions.splice(index, 1);
