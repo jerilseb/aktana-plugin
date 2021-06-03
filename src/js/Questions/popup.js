@@ -107,13 +107,8 @@ customElements.define(
 
         async submit() {
             if (this.selectionActive) {
-                let isCorrect = this._optionsEl.revealAnswers(this._correctOptions, this._optionsEl.selected);
 
-                this.status = isCorrect ? "correct-answer" : "wrong-answer";
-                await sleep(1000);
-
-                this.status = "attempted";
-
+                // Revealing answers will reset selected. So dispatch first
                 this.dispatchEvent(
                     new CustomEvent("submit", {
                         bubbles: false,
@@ -123,6 +118,12 @@ customElements.define(
                         },
                     })
                 );
+
+                let isCorrect = this._optionsEl.revealAnswers(this._correctOptions, this._optionsEl.selected);
+                this.status = isCorrect ? "correct-answer" : "wrong-answer";
+                await sleep(1000);
+
+                this.status = "attempted";
             }
         }
 

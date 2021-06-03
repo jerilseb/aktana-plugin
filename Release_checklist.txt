@@ -1,3 +1,5 @@
 1. Set Debug=false
 2. Verify that Real API is being used
 3. Bump version
+4. Test on 2 or 3 screen sizes
+5. Test in actual Chrome, not just Chromium based browsers

@@ -98,6 +98,15 @@ export async function deleteQuestion (quizId, videoId) {
 }
 
 export async function submitQuestion(selectedOptions, videoId, quizId, questionId) {
+    const payload = {
+        response: {
+            attempted: {
+                [questionId]: selectedOptions
+            },
+            skipped: []
+        }
+    }
+    LOG("Submitting", payload);
     await sleep(1000);
 }
 
