@@ -152,6 +152,7 @@ export default class Question {
                     this._questions.splice(index, 1);
                 }
                 this._questions.push(question);
+                this.updateMarkerPosition(question)
             }
 
             this._popupEl.status = "saved";
@@ -195,7 +196,7 @@ export default class Question {
             class="vken-question-pin ${animate && "animated"}"
             data-qid=${qId}
             data-tip="Question at ${secondsToHours(start)}"
-            style="left: calc(${percentage}% - 8px)"
+            style="left: calc(${percentage}% - 9px)"
         >
             <div class="question-icon"></div>
         </div>
@@ -208,6 +209,18 @@ export default class Question {
             LOG("Clicked on Marker", qId);
             this._EE.emit("marker-click", qId);
         });
+    }
+
+    updateMarkerPosition(question) {
+        let marker = this._timeline.querySelector(`[data-qid="${question.id}"]`);
+        if(marker) {
+            const start = parseInt(question.time);
+            const duration = parseInt(this._video.duration);
+            const percentage = ((start / duration) * 100).toFixed(2);
+            marker.setAttribute('data-tip', `Question at ${secondsToHours(start)}`);
+            marker.style.left = `calc(${percentage}% - 9px)`;
+            LOG("Moved marker to", start);
+        }
     }
 
     removeMarker(questionId) {
@@ -229,7 +242,11 @@ export default class Question {
     async initialize(videoId, videoTitle) {
         this._videoId = videoId;
         this._videoTitle = videoTitle;
-        this._timeline = this._container.querySelector(".vjs-progress-control");
+
+        this._timeline = this._container.querySelector(".vjs-progress-holder");
+        if(!this._timeline) {
+            this._timeline = this._container.querySelector(".vjs-progress-control");
+        }
 
         this.render();
         this._el = this._container.querySelector(".questions-container");

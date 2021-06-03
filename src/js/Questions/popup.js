@@ -1,5 +1,5 @@
 import "./Options";
-import { LOG, sleep } from "../lib/util";
+import { LOG, sleep, secondsToHoursFull, hmsToSeconds, secondsToHours } from "../lib/util";
 import { html, render } from "lit-html";
 import "./popup.scss";
 
@@ -9,14 +9,13 @@ customElements.define(
         get template() {
             return html`
                 <div class="status-overlay"></div>
-                <div class="title"></div>
+                <div class="title" data-value="Question at ${secondsToHours(this.qTime)}"  @click=${() => this.editTime()}></div>
                 <div class="q-text" ?contenteditable=${this.editable} placeholder="Type the question here.."></div>
                 <q-options ?editable=${this.editable}></q-options>
 
                 <div class="submit-button" @click=${() => this.submit()}>SUBMIT</div>
                 <div class="save-button" @click=${() => this.saveQuestion()}></div>
                 <div class="delete-button" @click=${() => this.confirmDeletion()}></div>
-                <div class="edit-time-button" @click=${() => {}}></div>
                 <div class="resume-button" @click=${() => this.closePopup()}></div>
                 <div class="close-button" @click=${() => this.closePopup()}></div>
                 <div class="delete-confirm-overlay">
@@ -25,6 +24,10 @@ customElements.define(
                         <div class="yes btn" @click=${() => this.deleteQuestion()}>Yes</div>
                         <div class="no btn" @click=${() => (this.status = "editing")}>No</div>
                     </div>
+                </div>
+                <div class="edit-time-overlay">
+                    <input class="time-input" type="text" placeholder="hh:mm:ss"  pattern="[0-9][0-9]:[0-5][0-9]:[0-5][0-9]" />
+                    <div class="update-btn btn" @click=${() => this.updateTime()}></div>
                 </div>
             `;
         }
@@ -35,6 +38,7 @@ customElements.define(
             this._editor = null;
             this._optionsEl = this.querySelector("q-options");
             this._questionText = this.querySelector(".q-text");
+            this._timeInput = this.querySelector('input.time-input');
 
             this.addEventListener("option-change", (event) => {
                 this.selectionActive = this._optionsEl.selected.length > 0;
@@ -42,10 +46,11 @@ customElements.define(
         }
 
         static get observedAttributes() {
-            return ["editable"];
+            return ["editable", "status"];
         }
 
         attributeChangedCallback(name) {
+            LOG("Attribute changed", name);
             render(this.template, this);
         }
 
@@ -71,6 +76,18 @@ customElements.define(
 
         confirmDeletion() {
             this.status = "confirm-delete";
+        }
+
+        editTime() {
+            let time = secondsToHoursFull(this.qTime);
+            this._timeInput.value = time;
+            this.status = "edit-time";
+        }
+
+        updateTime() {
+            let time = hmsToSeconds(this._timeInput.value);
+            this.qTime = time;
+            this.status = "editing";
         }
 
         // reset() {

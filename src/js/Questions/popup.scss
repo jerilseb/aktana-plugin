@@ -35,6 +35,7 @@
             color: #ffffff;
             border-radius: 2px;
             z-index: 11;
+            pointer-events: none;
 
             &::before {
                 content: "Question"
@@ -42,7 +43,13 @@
         }
 
         &[editable] .title::before {
-            content: "Edit Question"
+            content: attr(data-value);
+        }
+
+        &[editable][status="editing"]:not([new]) .title {
+            cursor: pointer;
+            pointer-events: auto;
+            // color: lightblue;
         }
 
         &[editable][new] .title::before {
@@ -183,6 +190,7 @@
             letter-spacing: 0.03em;
             border-radius: 3px;
             cursor: pointer;
+            border: 1px solid #227fd6;
         }
 
         .save-button::before {
@@ -200,12 +208,13 @@
             position: absolute;
             bottom: 1.5em;
             right: 7em;
-            background-color: #eaeaea;
+            background-color: #fafafa;
             align-items: center;
             justify-content: center;
             letter-spacing: 0.03em;
             cursor: pointer;
             border-radius: 3px;
+            border: 1px solid #7a7a7a;
 
             &::before {
                 content: "";
@@ -214,6 +223,10 @@
                 background-size: contain;
                 width: 20px;
                 height: 20px;
+            }
+
+            &:hover::before {
+                transform: scale(1.05);
             }
 
             &:hover::after {
@@ -232,44 +245,49 @@
             }
         }
 
-        .edit-time-button {
-            width: 2.2em;
-            height: 32px;
-            display: flex;
-            position: absolute;
-            bottom: 1.5em;
-            right: 9.8em;
-            background-color: #eaeaea;
-            align-items: center;
-            justify-content: center;
-            letter-spacing: 0.03em;
-            cursor: pointer;
-            border-radius: 3px;
+        // .edit-time-button {
+        //     width: 2.2em;
+        //     height: 32px;
+        //     display: none;
+        //     position: absolute;
+        //     bottom: 1.5em;
+        //     right: 7em;
+        //     background-color: #fafafa;
+        //     align-items: center;
+        //     justify-content: center;
+        //     letter-spacing: 0.03em;
+        //     cursor: pointer;
+        //     border-radius: 3px;
+        //     border: 1px solid #7a7a7a;
 
-            &::before {
-                content: "";
-                background-image: svg-load("../../icons/time.svg");
-                background-repeat: no-repeat;
-                background-size: contain;
-                width: 20px;
-                height: 20px;
-            }
+        //     &::before {
+        //         content: "";
+        //         background-image: svg-load("../../icons/time.svg");
+        //         background-repeat: no-repeat;
+        //         background-size: contain;
+        //         width: 20px;
+        //         height: 20px;
+        //     }
 
-            &:hover::after {
-                content: 'Change question time';
-                position: absolute;
-                width: 23ch;
-                height: 2em;
-                font-size: 13px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                color: white;
-                background-color: #444444;
-                border-radius: 3px;
-                transform: translate(0, -3em);
-            }
-        }
+        //     &:hover::before {
+        //         transform: scale(1.05);
+        //     }
+
+        //     &:hover::after {
+        //         content: 'Change question time';
+        //         position: absolute;
+        //         width: 23ch;
+        //         height: 2em;
+        //         font-size: 13px;
+        //         display: flex;
+        //         justify-content: center;
+        //         align-items: center;
+        //         color: white;
+        //         background-color: #444444;
+        //         border-radius: 3px;
+        //         transform: translate(0, -3em);
+        //     }
+        // }
 
         .resume-button {
             display: none;
@@ -284,6 +302,7 @@
             align-items: center;
             justify-content: center;
             border-radius: 3px;
+            border: 1px solid #227fd6;
             cursor: pointer;
 
             &::before {
@@ -300,6 +319,60 @@
             }
         }
 
+        .edit-time-overlay {
+            position: absolute;
+            z-index: 10;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255,255, 0.4);
+            backdrop-filter: blur(7px);
+            display: none;
+            justify-content: center;
+            flex-direction: row;
+            align-items: center;
+
+            .time-input {
+                width: 8ch;
+                display: inline-block;
+                font-size: 18px;
+                letter-spacing: 1px;
+                height: 2.5em;
+                border-radius: 4px;
+
+                &:focus {
+                    outline: none;
+                    box-shadow: none;
+                }
+
+                &:invalid {
+                    border: 2px solid rgb(255, 106, 106);
+                }
+            }
+
+            .time-input:invalid + .update-btn {
+                pointer-events: none;
+                opacity: 0.5;
+            }
+
+            .update-btn {
+                width: 2.5em;
+                height: 2.5em;
+                background-image: svg-load("../../icons/tick.svg", fill=#227fd6);
+                flex-shrink: 0;
+                background-size: 2.5em;
+                background-repeat: round;
+                color: #ffffff;
+                align-items: center;
+                justify-content: center;
+                border-radius: 4px;
+                font-size: 18px;
+                margin-left: 0.5em;
+                cursor: pointer;
+            }
+        }
+
         .delete-confirm-overlay {
             position: absolute;
             z-index: 10;
@@ -307,8 +380,8 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(255, 255,255, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255,255, 0.5);
+            backdrop-filter: blur(7px);
             display: none;
             justify-content: center;
             flex-direction: column;
@@ -327,7 +400,7 @@
                 .btn {
                     cursor: pointer;
                     margin: 10px;
-                    padding: 6px 18px;
+                    padding: 6px 20px;
                     border-radius: 3px;
                     color: #ffffff;
 
@@ -345,11 +418,18 @@
         }
 
         &[status="attempting"][selection-active] .submit-button,
-        &[status="editing"][selection-active] .save-button,
+        &[status="editing"] .save-button,
         &[status="editing"]:not([new]) .delete-button,
+        &[status="editing"]:not([new]) .edit-time-button,
         &[status="attempted"] .resume-button,
+        &[status="edit-time"] .edit-time-overlay,
         &[status="confirm-delete"] .delete-confirm-overlay {
             display: flex;
+        }
+
+        &[status="editing"]:not([selection-active]) .save-button {
+            opacity: 0.5;
+            pointer-events: none;
         }
 
         .q-text {

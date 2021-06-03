@@ -145,6 +145,10 @@ input:not(:placeholder-shown):not(:focus):invalid {
     pointer-events: none;
 }
 
+.submit.loading svg {
+    display: none;
+}
+
 .submit.failed {
     background: #df4848;
     border: 1px solid #df4848;

@@ -1,32 +1,68 @@
 <html>
-    <head>
-        <link rel="stylesheet" href="font-awesome.min.css" />
-        <link rel="stylesheet" href="style.css" />
-    </head>
 
-    <body>
-        <div class="logged-in hidden">
-            <div class="message">You are logged in as Administrator and can add/edit questions</div>
-            <div class="logout-button">Logout</div>
+<head>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="logged-in hidden">
+        <div class="message">You are logged in as Administrator and can add/edit questions</div>
+        <div class="logout-button">Logout</div>
+    </div>
+    <div class="login hidden">
+        <legend class="legend">Administrator Login</legend>
+
+        <div class="input email">
+            <input type="email" placeholder="Email" required />
+            <span>
+                <svg width="20px" height="20px" fill="#cccccc" version="1.1" id="Capa_1"
+                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                    viewBox="0 0 474 474" style="enable-background:new 0 0 474 474;" xml:space="preserve">
+                    <path d="M437.5,59.3h-401C16.4,59.3,0,75.7,0,95.8v282.4c0,20.1,16.4,36.5,36.5,36.5h401c20.1,0,36.5-16.4,36.5-36.5V95.8
+                   C474,75.7,457.6,59.3,437.5,59.3z M432.2,86.3L239.5,251.1L46.8,86.3H432.2z M447,378.2c0,5.2-4.3,9.5-9.5,9.5h-401
+                   c-5.2,0-9.5-4.3-9.5-9.5V104.9l203.7,174.2c0.1,0.1,0.3,0.2,0.4,0.3c0.1,0.1,0.3,0.2,0.4,0.3c0.3,0.2,0.5,0.4,0.8,0.5
+                   c0.1,0.1,0.2,0.1,0.3,0.2c0.4,0.2,0.8,0.4,1.2,0.6c0.1,0,0.2,0.1,0.3,0.1c0.3,0.1,0.6,0.3,1,0.4c0.1,0,0.3,0.1,0.4,0.1
+                   c0.3,0.1,0.6,0.2,0.9,0.2c0.1,0,0.3,0.1,0.4,0.1c0.3,0.1,0.7,0.1,1,0.2c0.1,0,0.2,0,0.3,0c0.4,0,0.9,0.1,1.3,0.1l0,0l0,0
+                   c0.4,0,0.9,0,1.3-0.1c0.1,0,0.2,0,0.3,0c0.3,0,0.7-0.1,1-0.2c0.1,0,0.3-0.1,0.4-0.1c0.3-0.1,0.6-0.2,0.9-0.2c0.1,0,0.3-0.1,0.4-0.1
+                   c0.3-0.1,0.6-0.2,1-0.4c0.1,0,0.2-0.1,0.3-0.1c0.4-0.2,0.8-0.4,1.2-0.6c0.1-0.1,0.2-0.1,0.3-0.2c0.3-0.2,0.5-0.3,0.8-0.5
+                   c0.1-0.1,0.3-0.2,0.4-0.3c0.1-0.1,0.3-0.2,0.4-0.3L447,109.2V378.2z" />
+                </svg>
+            </span>
         </div>
-        <div class="login hidden">
-            <legend class="legend">Administrator Login</legend>
 
-            <div class="input email">
-                <input type="email" placeholder="Email" required />
-                <span><i class="fa fa-envelope-o"></i></span>
-            </div>
+        <div class="input password">
+            <input type="password" placeholder="Password" required minlength="4" />
+            <span>
+                <svg width="18px" height="18px" fill="#cccccc" version="1.1" id="Layer_1"
+                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                    viewBox="0 0 327.269 327.269" style="enable-background:new 0 0 327.269 327.269;"
+                    xml:space="preserve">
+                    <path id="XMLID_232_" d="M314.252,21.628c-5.858-5.858-15.355-5.857-21.213,0.001l-15.251,15.253l-32.491-32.49
+               c-5.857-5.857-15.355-5.858-21.213,0c-5.857,5.858-5.857,15.355,0.001,21.213l32.491,32.491l-30.506,30.51l-15.252-15.252
+               c-5.857-5.858-15.355-5.858-21.213,0c-5.858,5.858-5.858,15.355,0,21.213l15.253,15.253l-57.276,57.283
+               c-14.765-10.463-32.349-16.125-50.813-16.125c-23.543,0-45.679,9.169-62.327,25.816c-16.649,16.648-25.818,38.783-25.818,62.327
+               c0,23.544,9.169,45.68,25.818,62.328c16.648,16.649,38.783,25.818,62.327,25.818c23.544,0,45.679-9.169,62.327-25.817
+               c16.649-16.648,25.818-38.784,25.818-62.328c0-18.461-5.66-36.042-16.12-50.804l67.777-67.785c0.036-0.036,0.076-0.065,0.112-0.101
+               c0.036-0.036,0.065-0.076,0.101-0.112l51.46-51.466c0.052-0.051,0.109-0.093,0.161-0.145c0.052-0.052,0.095-0.109,0.145-0.161
+               l25.706-25.709C320.111,36.983,320.111,27.486,314.252,21.628z M137.882,280.238c-10.982,10.982-25.584,17.031-41.114,17.031
+               s-30.132-6.048-41.114-17.031c-10.982-10.982-17.031-25.583-17.031-41.114c0-15.531,6.048-30.132,17.031-41.113
+               c10.982-10.982,25.583-17.03,41.114-17.03c15.531,0,30.132,6.048,41.114,17.03c10.982,10.981,17.031,25.583,17.031,41.113
+               C154.913,254.655,148.864,269.256,137.882,280.238z" />
+                </svg>
 
-            <div class="input password">
-                <input type="password" placeholder="Password" required  minlength="4"/>
-                <span><i class="fa fa-lock"></i></span>
-            </div>
-
-            <button class="submit">
-                <i class="fa fa-long-arrow-right"></i>
-            </button>
+            </span>
         </div>
-        <script src="./options.js"></script>
-    </body>
+
+        <button class="submit">
+            <svg width="15px" height="15px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 490 490"
+                style="enable-background:new 0 0 490 490;" xml:space="preserve">
+                <polygon points="240.112,0 481.861,245.004 240.112,490 8.139,490 250.29,245.004 8.139,0 "
+                    fill="#ffffff" />
+            </svg>
+        </button>
+    </div>
+    <script src="./options.js"></script>
+</body>
 
 </html>

@@ -5,10 +5,6 @@ import { template } from "../lib/domUtil";
 customElements.define(
     "q-options",
     class extends HTMLElement {
-        constructor() {
-            super();
-            this._selectedIdx = [];
-        }
 
         connectedCallback() {
             this.addEventListener("option-click", event => {
@@ -17,13 +13,8 @@ customElements.define(
                         element.selected = false;
                     }
                     event.target.selected = true;
-                    this._selectedIdx = [event.target.index];
                 } else {
                     event.target.selected = !event.target.selected;
-                    this._selectedIdx = [];
-                    for (let element of this.selectedOptionElements) {
-                        this._selectedIdx.push(element.index);
-                    }
                 }
 
                 this.dispatchEvent(
@@ -101,7 +92,13 @@ customElements.define(
         }
 
         get selected() {
-            return this._selectedIdx;
+            let selectedIdx = [];
+            for (let i = 0; i < this.optionElements.length; i++) {
+                if (this.optionElements[i].selected) {
+                    selectedIdx.push(i);
+                }
+            }
+            return selectedIdx;
         }
 
         set selected(values) {
@@ -114,7 +111,6 @@ customElements.define(
                 }
             }
 
-            this._selectedIdx = values;
             this.dispatchEvent(
                 new CustomEvent("option-change", {
                     bubbles: true,

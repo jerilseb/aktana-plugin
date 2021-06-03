@@ -167,27 +167,26 @@
 
         &[status="active"] .checkbox {
             cursor: pointer;
-
-            &:hover {
-                border-color: #999999;
-                transform: scale(1.05);
-                border-width: 0.35em;
-            }
         }
 
-        &[type="single"][selected] .checkbox.checkbox,
-        &[type="single"][selected] .checkbox.checkbox:hover {
+        &[status="active"][type="single"] .checkbox:hover {
+            border-color: #999999;
+            border-width: 0.35em;
+        }
+
+        &[status="active"][type="single"][selected] .checkbox,
+        &[status="active"][type="single"][selected] .checkbox:hover {
             border-width: 0.35em;
             border-color: #227fd6;
         }
 
-        // &[type="multi"][selected] .checkbox {
-        //     border: none;
-        //     background-image: svg-load("../../icons/tick.svg", fill=#227fd6);
-        // }
+        &[type="multi"][status="active"][selected]:not([editable]) .checkbox {
+            border: none;
+            background-image: svg-load("../../icons/tick.svg", fill=#227fd6);
+        }
 
-        &[status="correct"] div.checkbox,
-        &[selected][editable] div.checkbox {
+        &[type][status="correct"] div.checkbox,
+        &[type][selected][editable] div.checkbox {
             border: none;
             background-image: svg-load("../../icons/tick.svg", fill=#18b574);
         }
@@ -197,9 +196,10 @@
             background-image: svg-load("../../icons/wrong.svg");
         }
 
+        &[type="multi"][status="active"] .checkbox:hover,
         &[editable] .checkbox:hover {
             border: none;
-            background-image: svg-load("../../icons/tick.svg", fill=#adadad);
+            background-image: svg-load("../../icons/tick.svg", fill=#bbbbbb);
         }
 
         // Option Text

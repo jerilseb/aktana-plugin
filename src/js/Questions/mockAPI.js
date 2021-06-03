@@ -1,5 +1,4 @@
-import { LOG, sleep } from "../lib/util";
-import { DASHBOARD_API_BASE } from "../lib/API";
+import { LOG, sleep, secondsToHours, hmsToSeconds } from "../lib/util";
 
 export async function fetchQuestions(videoId) {
     const questions = [];
@@ -34,7 +33,7 @@ export async function createQuestion ({ text, time, options, correct, type }, vi
             type: questionType,
             difficulty: "Moderate"
         },
-        appears_at: time
+        appears_at: secondsToHours(time)
     };
 
     questions.push(data);
@@ -69,7 +68,7 @@ export async function updateQuestion ({ text, time, options, correct, type }, qu
             type: questionType,
             difficulty: "Moderate"
         },
-        appears_at: time
+        appears_at: secondsToHours(time)
     };
 
     questions.push(data);
@@ -101,11 +100,12 @@ export async function submitQuestion(selectedOptions, videoId, quizId, questionI
 
 function transformData(data) {
     let q = {};
-    let { question, appears_at } = data;
-    q["id"] = question["id"],
+    let { question, appears_at, quiz_id } = data;
+    q["id"] = question["id"];
+    q["quizId"] = quiz_id;
     q["text"] = question["question_json"]["blocks"][0].data['text'];
     q["options"] = question["options"]["options"];
-    q["time"] = appears_at,
+    q["time"] = hmsToSeconds(appears_at);
     q["correct"] = question["answer"]["answer"];
     q["type"] = question["type"] === "MCQ-Single-Correct" ? "single" : "multi";
     q["shown"] = false;
