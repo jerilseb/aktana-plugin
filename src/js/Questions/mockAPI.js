@@ -16,12 +16,13 @@ export async function fetchQuestions(videoId) {
 
 export async function createQuestion ({ text, time, options, correct, type }, videoId) {
     let questions = JSON.parse(localStorage.getItem(videoId)) || [];
-    id = getRandomInt(10000);
+    let questionId = getRandomInt(10000);
+    let quizId = getRandomInt(10000);
     const questionType = type === "single" ? "MCQ-Single-Correct" : "MCQ-Multiple-Correct"
 
     const data = {
         question: {
-            id,
+            id: questionId,
             question_json: { "blocks": [
                         {
                             type: "paragraph",
@@ -33,6 +34,7 @@ export async function createQuestion ({ text, time, options, correct, type }, vi
             type: questionType,
             difficulty: "Moderate"
         },
+        quiz_id: quizId,
         appears_at: secondsToHours(time)
     };
 
@@ -47,7 +49,7 @@ export async function updateQuestion ({ text, time, options, correct, type }, qu
     let questions = JSON.parse(localStorage.getItem(videoId)) || [];
     const questionType = type === "single" ? "MCQ-Single-Correct" : "MCQ-Multiple-Correct"
 
-    let question = questions.find(q => q.question.id === questionId);
+    let question = questions.find(q => q.quiz_id === quizId);
     let index = questions.indexOf(question);
 
     if (index > -1) {
@@ -68,6 +70,7 @@ export async function updateQuestion ({ text, time, options, correct, type }, qu
             type: questionType,
             difficulty: "Moderate"
         },
+        quiz_id: quizId,
         appears_at: secondsToHours(time)
     };
 
@@ -79,10 +82,10 @@ export async function updateQuestion ({ text, time, options, correct, type }, qu
     return transformData(data);
 }
 
-export async function deleteQuestion (questionId, videoId) {
+export async function deleteQuestion (quizId, videoId) {
     let questions = JSON.parse(localStorage.getItem(videoId)) || [];
 
-    let question = questions.find(q => q.question.id === questionId);
+    let question = questions.find(q => q.quiz_id === quizId);
     let index = questions.indexOf(question);
     if (index > -1) {
         questions.splice(index, 1);
