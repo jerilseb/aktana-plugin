@@ -201,6 +201,25 @@
             content: "CREATE";
         }
 
+        &[status="editing"]:not([selection-active]) .save-button {
+            background: #6ca1d3;
+            border: 1px solid #6ca1d3;
+            cursor: auto;
+
+            &:hover::after {
+                content: 'Mark the correct answer to save';
+                position: absolute;
+                width: 15ch;
+                text-align: center;
+                font-size: 13px;
+                padding: .5em;
+                color: white;
+                background-color: #4d4d4d;
+                border-radius: 3px;
+                transform: translate(-1em, -4em);
+            }
+        }
+
         .delete-button {
             width: 2.2em;
             height: 32px;
@@ -239,7 +258,7 @@
                 justify-content: center;
                 align-items: center;
                 color: white;
-                background-color: #444444;
+                background-color: #4d4d4d;
                 border-radius: 3px;
                 transform: translate(0, -3em);
             }
@@ -425,11 +444,6 @@
         &[status="edit-time"] .edit-time-overlay,
         &[status="confirm-delete"] .delete-confirm-overlay {
             display: flex;
-        }
-
-        &[status="editing"]:not([selection-active]) .save-button {
-            opacity: 0.5;
-            pointer-events: none;
         }
 
         .q-text {

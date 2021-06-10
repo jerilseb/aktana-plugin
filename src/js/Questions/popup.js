@@ -64,7 +64,7 @@ customElements.define(
         }
 
         saveQuestion() {
-            if (!this.editable) return;
+            if (!this.editable || !this.selectionActive) return;
 
             this.dispatchEvent(
                 new CustomEvent("save", {

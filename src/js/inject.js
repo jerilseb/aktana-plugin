@@ -17,6 +17,7 @@ window.addEventListener("load", async () => {
 async function initialize() {
     const EE = new EventEmitter();
     let video = null;
+    let setupInProgress = false;
 
     EE.on("seek-video", time => {
         if (video) {
@@ -56,6 +57,16 @@ async function initialize() {
     }
 
     async function setupControls() {
+        if(setupInProgress) {
+            LOG("Setup already in progress, skipping");
+            return;
+        }
+
+        setupInProgress = true;
+        setTimeout(() => {
+            setupInProgress = false;
+        }, 1000);
+
         const videoId = "aktana-" + video.duration.toFixed(3).replace(".", "").padStart(8, "0");
         const container = video.parentElement;
         const controlBar = await waitForElement(container, ".vjs-control-bar");
