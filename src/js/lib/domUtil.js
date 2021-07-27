@@ -64,7 +64,7 @@ let currentObserver = null,
 
 export function clearElementObserver() {
     if (currentObserver) {
-        LOG("Clearing observer:", observerName);
+        // LOG("Clearing observer:", observerName);
         clearTimeout(currentObserver);
         currentObserver = null;
         observerName = null;

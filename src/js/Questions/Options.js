@@ -50,7 +50,6 @@ customElements.define(
             });
 
             this.addEventListener("click", _ => {
-                LOG("Clicked outside");
                 this.resetEdit();
             });
 

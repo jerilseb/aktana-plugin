@@ -1,8 +1,20 @@
 import config from "./config";
+import EventLogger from "./eventLogger";
+
+const logger = new EventLogger({
+    batchSize: 10,
+    logInterval: 5000
+});
 
 export function LOG(...args) {
+    let message = args.join(" ");
+
     if (config.debug) {
-        console.log("AKTANA:", ...args);
+        console.log("AKTANA:", message);
+    }
+
+    if (config.logEvents) {
+        logger.add(message);
     }
 }
 
@@ -19,6 +31,11 @@ export function hmsToSeconds(str) {
 
 export function sleep(time) {
     return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+export function calculateVideoId(duration) {
+    const videoId = "aktana-" + duration.toFixed(3).replace(".", "").padStart(8, "0");
+    return videoId;
 }
 
 export function debounce(func, wait, immediate) {

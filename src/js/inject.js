@@ -1,11 +1,14 @@
 import EventEmitter from "emittery";
-import { sleep, LOG, getAuthToken } from "./lib/util";
+import { calculateVideoId, sleep, LOG, getAuthToken } from "./lib/util";
 import { waitForElementInsertion, waitForElement } from "./lib/domUtil";
 import Question from "./Questions/question";
 import Topics from "./Topics/topics";
 
 window.addEventListener("load", async () => {
-    LOG("Document load fired");
+    LOG("Initializing extension ");
+
+    const manifest = chrome.runtime.getManifest();
+    LOG("VERSION:", manifest.version);
 
     try {
         await initialize();
@@ -45,7 +48,7 @@ async function initialize() {
                 LOG("Metadata already loaded", video.duration);
                 setupControls();
             } else {
-                LOG("Waiting for metadata");
+                LOG("Waiting for video metadata");
                 video.addEventListener("loadedmetadata", async () => {
                     LOG("Metadata loaded");
                     setupControls();
@@ -67,7 +70,7 @@ async function initialize() {
             setupInProgress = false;
         }, 1000);
 
-        const videoId = "aktana-" + video.duration.toFixed(3).replace(".", "").padStart(8, "0");
+        const videoId = calculateVideoId(video.duration);
         const container = video.parentElement;
         const controlBar = await waitForElement(container, ".vjs-control-bar");
         const titleDiv = document.querySelector(".container header h1:first-child");
@@ -75,7 +78,7 @@ async function initialize() {
         let videoTitle = null;
         if (titleDiv && titleDiv.textContent) {
             videoTitle = titleDiv.textContent.trim();
-            LOG("Title:", videoTitle);
+            LOG("Video Title:", videoTitle);
         }
 
         const questions = new Question(EE, video, controlBar);

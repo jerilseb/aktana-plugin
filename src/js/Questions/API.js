@@ -2,6 +2,7 @@ import { LOG, sleep, hmsToSeconds, getAuthToken } from "../lib/util";
 import { DASHBOARD_API_BASE } from "../lib/API";
 
 export async function fetchQuestions(videoId) {
+    LOG("Fetching questions for", videoId);
     const questions = [];
 
     try {
@@ -14,7 +15,7 @@ export async function fetchQuestions(videoId) {
         if (data.body && data.body.length > 0) {
             const { body } = data;
             for (let item of body) {
-                let q = transformData(item);
+                let q = transformData(item, data.video_id);
                 questions.push(q);
             }
         }
@@ -175,9 +176,11 @@ export function secondsToHours(seconds) {
     return hours + ":" + minutes + ":" + seconds;
 }
 
-function transformData(data) {
+function transformData(data, videoId) {
     let q = {};
     let { question, appears_at, quiz_id } = data;
+
+    q["videoId"] = videoId;
     q["id"] = question["id"];
     q["quizId"] = quiz_id;
     q["text"] = question["question_json"]["blocks"][0].data['text'];

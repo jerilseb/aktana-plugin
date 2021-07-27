@@ -1,3 +1,4 @@
 export default {
-    debug: true
+    debug: false,
+    logEvents: true
 };

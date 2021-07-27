@@ -50,7 +50,6 @@ customElements.define(
         }
 
         attributeChangedCallback(name) {
-            LOG("Attribute changed", name);
             render(this.template, this);
         }
 

@@ -1,10 +1,10 @@
 import "@webcomponents/custom-elements";
 import { html, render } from "lit-html";
-import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion, submitQuestion } from "./mockAPI";
-// import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion, submitQuestion } from "./API";
+// import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion, submitQuestion } from "./mockAPI";
+import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion, submitQuestion } from "./API";
 import questionPlaceholder from "./questionPlaceholder";
 import { secondsToHours, sleep } from "../lib/util";
-import { LOG, getAuthToken } from "../lib/util";
+import { LOG, getAuthToken, calculateVideoId } from "../lib/util";
 import { template } from "../lib/domUtil";
 import "./popup";
 import "./question.scss";
@@ -28,6 +28,14 @@ export default class Question {
                 if (!question.shown && currentTime >= start && currentTime <= start + 5) {
                     this.currentQuestion = question;
                     this.visible = true;
+
+                    LOG("Question shown on time_update:", question.id);
+                    const calculatedVideoId = calculateVideoId(this._video.duration);
+                    if (question.videoId !== this._videoId || question.videoId !== calculatedVideoId) {
+                        LOG(
+                            `VIDEO_ID_MISMATCH: q_id: ${question.id}, time: ${currentTime}, init_video_id: ${this._videoId}, q_video_id: ${question.videoId}, calc_video_id: ${calculatedVideoId}`
+                        );
+                    }
                     break;
                 }
             }
@@ -38,6 +46,14 @@ export default class Question {
             if (question) {
                 this.currentQuestion = question;
                 this.visible = true;
+
+                LOG("Question shown on marker_click:", question.id);
+                const calculatedVideoId = calculateVideoId(this._video.duration);
+                if (question.videoId !== this._videoId || question.videoId !== calculatedVideoId) {
+                    LOG(
+                        `VIDEO_ID_MISMATCH: q_id: ${question.id}, init_video_id: ${this._videoId}, q_video_id: ${question.videoId}, calc_video_id: ${calculatedVideoId}`
+                    );
+                }
             }
         });
     }
@@ -57,7 +73,7 @@ export default class Question {
     }
 
     render() {
-        LOG("Rendering popup");
+        LOG("Rendering question popup");
         let div = this._container.querySelector("#vken-controls");
         if (!div) {
             div = document.createElement("div");
@@ -70,10 +86,10 @@ export default class Question {
     closeAndPlay() {
         this.visible = false;
         this._video.play();
+        LOG("Dismissed question: qId", this._currentQuestion.id);
     }
 
     set currentQuestion(question) {
-        LOG("Setting question", question);
         this._currentQuestion = question;
         this._popupEl.question = question;
     }
@@ -133,6 +149,7 @@ export default class Question {
         let { selected } = event.detail;
 
         submitQuestion(selected, this._videoId, quizId, id);
+        LOG("Attempted question, qId:", id);
     }
 
     async saveQuestion() {
@@ -142,17 +159,26 @@ export default class Question {
 
         try {
             if (id === -1) {
-                let question = await createQuestion({ text, options, correct, correct_text, time, type }, this._videoId, this._videoTitle);
+                let question = await createQuestion(
+                    { text, options, correct, correct_text, time, type },
+                    this._videoId,
+                    this._videoTitle
+                );
                 this._questions.push(question);
                 this.insertMarker(question, true);
             } else {
-                let question = await updateQuestion({ text, options, correct, correct_text, time, type }, id, quizId, this._videoId);
+                let question = await updateQuestion(
+                    { text, options, correct, correct_text, time, type },
+                    id,
+                    quizId,
+                    this._videoId
+                );
                 let index = this._questions.indexOf(this.currentQuestion);
                 if (index > -1) {
                     this._questions.splice(index, 1);
                 }
                 this._questions.push(question);
-                this.updateMarkerPosition(question)
+                this.updateMarkerPosition(question);
             }
 
             this._popupEl.status = "saved";
@@ -206,18 +232,18 @@ export default class Question {
         this._timeline.append(el);
 
         marker.addEventListener("click", _ => {
-            LOG("Clicked on Marker", qId);
+            LOG("Clicked on Marker - qId:", qId);
             this._EE.emit("marker-click", qId);
         });
     }
 
     updateMarkerPosition(question) {
         let marker = this._timeline.querySelector(`[data-qid="${question.id}"]`);
-        if(marker) {
+        if (marker) {
             const start = parseInt(question.time);
             const duration = parseInt(this._video.duration);
             const percentage = ((start / duration) * 100).toFixed(2);
-            marker.setAttribute('data-tip', `Question at ${secondsToHours(start)}`);
+            marker.setAttribute("data-tip", `Question at ${secondsToHours(start)}`);
             marker.style.left = `calc(${percentage}% - 9px)`;
             LOG("Moved marker to", start);
         }
@@ -244,7 +270,7 @@ export default class Question {
         this._videoTitle = videoTitle;
 
         this._timeline = this._container.querySelector(".vjs-progress-holder");
-        if(!this._timeline) {
+        if (!this._timeline) {
             this._timeline = this._container.querySelector(".vjs-progress-control");
         }
 
@@ -254,7 +280,7 @@ export default class Question {
 
         this.visible = false;
         this._questions = await fetchQuestions(videoId);
-        LOG("Questions fetched", this._questions);
+        LOG(this._questions.length, "Questions fetched");
 
         if (this._questions.length > 0) {
             LOG("Setting up timeline Markers");

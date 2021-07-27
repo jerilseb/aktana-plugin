@@ -1,4 +1,4 @@
-1. Set Debug=false
+1. Set Debug=false, log=true
 2. Verify that Real API is being used
 3. Bump version
 4. Test on 2 or 3 screen sizes
