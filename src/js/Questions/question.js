@@ -31,7 +31,12 @@ export default class Question {
 
                     LOG("Question shown on time_update:", question.id);
                     const calculatedVideoId = calculateVideoId(this._video.duration);
-                    if (question.videoId !== this._videoId || question.videoId !== calculatedVideoId) {
+                    if (question.videoId !== calculatedVideoId) {
+                        LOG(
+                            `CALCULATED_ID_MISMATCH: q_id: ${question.id}, time: ${currentTime}, init_video_id: ${this._videoId}, q_video_id: ${question.videoId}, calc_video_id: ${calculatedVideoId}`
+                        );
+                    }
+                    if (question.videoId !== this._videoId) {
                         LOG(
                             `VIDEO_ID_MISMATCH: q_id: ${question.id}, time: ${currentTime}, init_video_id: ${this._videoId}, q_video_id: ${question.videoId}, calc_video_id: ${calculatedVideoId}`
                         );
@@ -49,7 +54,12 @@ export default class Question {
 
                 LOG("Question shown on marker_click:", question.id);
                 const calculatedVideoId = calculateVideoId(this._video.duration);
-                if (question.videoId !== this._videoId || question.videoId !== calculatedVideoId) {
+                if (question.videoId !== calculatedVideoId) {
+                    LOG(
+                        `CALCULATED_ID_MISMATCH: q_id: ${question.id}, init_video_id: ${this._videoId}, q_video_id: ${question.videoId}, calc_video_id: ${calculatedVideoId}`
+                    );
+                }
+                if (question.videoId !== this._videoId) {
                     LOG(
                         `VIDEO_ID_MISMATCH: q_id: ${question.id}, init_video_id: ${this._videoId}, q_video_id: ${question.videoId}, calc_video_id: ${calculatedVideoId}`
                     );
