@@ -83,7 +83,6 @@ export default class Question {
     }
 
     render() {
-        LOG("Rendering question popup");
         let div = this._container.querySelector("#vken-controls");
         if (!div) {
             div = document.createElement("div");
@@ -273,6 +272,7 @@ export default class Question {
         for (let question of this._questions) {
             this.insertMarker(question, false);
         }
+        LOG("Setup timeline Markers");
     }
 
     async initialize(videoId, videoTitle) {
@@ -293,7 +293,6 @@ export default class Question {
         LOG(this._questions.length, "Questions fetched");
 
         if (this._questions.length > 0) {
-            LOG("Setting up timeline Markers");
             this.setupTimelineMarkers();
         }
     }
